@@ -1,0 +1,5 @@
+{
+	"easysass.compileAfterSave": true,
+	"easysass.excludeRegex": "_.*.scss",
+	"easysass.targetDir": "public/css"
+}
