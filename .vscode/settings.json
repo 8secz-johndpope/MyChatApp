@@ -1,5 +1,11 @@
 {
 	"easysass.compileAfterSave": true,
 	"easysass.excludeRegex": "_.*.scss",
-	"easysass.targetDir": "public/css"
+	"easysass.targetDir": "public/css",
+	"easysass.formats": [
+		{
+			"format": "compressed",
+			"extension": ".min.css"
+		}
+	]
 }
