@@ -4,7 +4,7 @@ const bodyparser = require('body-parser');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const db = require('mongodb');
+const MongoClient = require('mongodb').MongoClient;
 
 http.listen(80, ()=>{
 	console.log('Server is listen on port 80');
@@ -21,7 +21,9 @@ app.set('view engine', 'ejs');
 
 //session
 app.use(session({
-	secret: "bethany",
+	secret: "this is a secret",
+	resave: true,
+	saveUninitialized: true,
 	cookie: {
 		"maxAge": 3600*24*30
 	}
@@ -70,6 +72,9 @@ app.post('/login', (req, res)=>{
 })
 
 //socket io
+
+const userMap = {};
+
 
 io.on('connection', (sock)=>{
 	console.log('client connect');
