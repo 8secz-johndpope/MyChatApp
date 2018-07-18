@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<%- include("includes/meta", {title: 'MY CHAT APP'}) %>
+</head>
+<body class='site'>
+	<%- include('includes/noscript') %>
+	<aside class='site-sidebar'>
+		<section class="user-info">
+			<header class="site-sidebar-title">Your Profile</header>
+			<div class="user-info-avatar">
+				<img src="<%= user.avatar_src %>" alt="Avatar" id="sidebar-avatar">
+			</div>
+			<div class="user-info-name" id="sidebar-username"><%= user.name %></div>
+			<div class="user-info-liked" id="sidebar-liked"><%= user.liked %></div>
+		</section>
+		<section class="user-other">
+			<header class='site-sidebar-title'>Online people</header>
+		</section>
+		<section class="site-sidebar-setting">
+			<div class="setting-panel">
+				<div class="setting-icon"></div>
+				<div class="setting-items">test 1</div>
+				<div class="setting-items">test 2</div>
+				<div class="setting-items">test 3</div>	
+			</div>
+		</section>
+	</aside>
+	<main class="site-container flex flex_column">
+		<div id="chat-mes" class='flex_grow'></div>
+		<div>
+			<form id='chat' class='flex flex_row'>
+				<input autocomplete=off type="text" class='flex_grow' name='mes'>
+				<input type="submit" value="Send">
+			</form>
+		</div>
+	</main>
+	<footer class="site-footer flex flex_column flex_center">
+		<div class='flex-items'>
+			<p>@2018 of <a href="https://github.com/beohoang98">NoobCoder</a></p>
+		</div>
+	</footer>
+	<script src='/js/script.js'></script>
+	<script>
+		(function($){
+
+			$('.setting-icon').click(function() {
+				$(this).parent().toggleClass('open');
+			});
+
+		})(jQuery);
+	</script>
+</body>
+</html>
