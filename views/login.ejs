@@ -2,31 +2,119 @@
 <html lang="en">
 <head>
 	<%- include("includes/meta", {title: 'LOGIN | MY CHAT APP'}) %>
+	<style>
+		main {
+			height: 100vh;
+		}
+		form {
+			width: 300px;
+			padding: 1em;
+			background-color: #333;
+			color: #ccc;
+			border-radius: 5px;
+		}
+		form a {
+			color: #fff;
+		}
+		.form-group {
+			margin: 1em;
+		}
+		.text-input {
+			padding: 1rem;
+			font-size: 1.25rem;
+			width: 230px;
+
+			border: 3px solid transparent;
+			border-radius: 5px;
+			outline: none;
+
+			transition: 0.2s;
+		}
+		.text-input:focus {
+			border-color: #0045f0;
+		}
+		input[type=submit] {
+			border: none;
+			outline: none;
+			width: 200px;
+
+			padding: 1rem;
+			margin: 1rem;
+			font-weight: bold;
+			border-radius: 5px;
+
+			transition: 0.5s;
+		}
+		input[type=submit]:hover {
+			background-color: #888;
+			cursor: pointer;
+		}
+		.fail-msg {
+			padding: 1em;
+			color: red;
+		}
+
+		.password-input {
+			position: relative;
+		}
+		.password-see {
+			position: absolute;
+			height: 100%;
+			width: 2em;
+			padding: 0 0.5em;
+			cursor: pointer;
+			top: 0;
+			right: 0;
+
+			background-image: url('/image/eye.png');
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+	</style>
 </head>
 <body>
 	<%- include('includes/noscript') %>
-	<div class="flex flex_row flex_center">
-		<form action="#" method="POST">
+	<main class="flex flex_column flex_center">
+		<form action="#" method="POST" class='flex flex_center flex_column'>
+
+			<header>
+				<h1>LOGIN</h1>
+			</header>
 
 			<div class="form-group">
-				<label for="username">USERNAME:</label>
-				<input type="text" name="username" id="username">
+				<input class='text-input' type="text" required placeholder="Username" name="username" id="username">
 			</div>
-			<div class="form-group">
-				<label for="password">PASSWORD:</label>
-				<input type="password" name="password" id="password">
+			<div class="form-group password-input">
+				<input class='text-input' type="password" required placeholder="Password" name="password" id="password">
+				<div for="" class="password-see"></div>
 			</div>
 
 			<div class="form-group">
 				<input type="submit" value="LOGIN">
 			</div>
 
+			<div align=center>
+				<p>Haven't account yet</p>
+				<p><a href="/signup">Signup</a> Here</p>
+			</div>
+
 		</form>
 		<div class="fail-msg">
 			<% if (err) { %>
-			<%= err %>
+			<%= "Username or password is incorrect" %>
 			<% }%>
 		</div>
-	</div>
+	</main>
+	<script>
+		$(document).ready(()=>{
+			$('.password-see').on('mousedown', ()=>{
+				$('#password').attr('type', 'text');
+			});
+			$('.password-see').on('mouseup', ()=>{
+				$('#password').attr('type', 'password');
+			});
+		});
+	</script>
 </body>
 </html>

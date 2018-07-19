@@ -14,17 +14,15 @@ $(document).ready(()=>{
 	})
 
 	socket.on('get all user', (arr)=>{
-
-		for (const user of data)
+		console.log(arr);
+		for (const user of arr)
 		{
 			const infoDiv = $('<div/>').addClass('people');
 			infoDiv.html(`
 				<div class="people-avatar">
 					<img src="${user.avatar}" alt="${user.name}"/>
 				</div>
-				<div class="people-name">
-					${user.name}
-				</div>
+				<div class="people-name">${user.name}</div>
 			`);
 
 			$('#people-online').append(infoDiv);
@@ -32,8 +30,19 @@ $(document).ready(()=>{
 
 	})
 
-	socket.on('chat message', (msg)=>{
-		console.log(msg);
-		$('#chat-mes').append($('<p/>').text(msg));
+	socket.on('yourid', (id)=>{
+
+		socket.emit('myname', {
+			name: "Beo",
+			id: id
+		});
+	
+		socket.on('chat message', (data)=>{
+			const msg = data.msg;
+
+			console.log(data);
+			$('#chat-mes').append($('<p/>').text(msg));
+		});
+
 	});
 });

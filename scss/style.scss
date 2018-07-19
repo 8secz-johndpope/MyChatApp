@@ -5,15 +5,15 @@ body {
 	font-family: 'Ubuntu', 'Roboto', sans-serif;
 	font-size: 15px;
 
-	height: 100vh;
+	min-height: 100vh;
 }
 
 .site {
 	display: grid;
 	display: -ms-grid;
 	grid-gap: 0;
-	grid-template-columns: 20% 80%;
-	grid-template-rows: 80% 20%;
+	grid-template-columns: 1fr 4fr;
+	grid-template-rows: 4fr 1fr;
 
 	&-sidebar {
 		position: relative;
