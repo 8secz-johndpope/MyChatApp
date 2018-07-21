@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<%- include("includes/meta", {title: 'SIGNUP | MY CHAT APP'}) %>
+</head>
+<body>
+		<%- include('includes/noscript') %>
+		<main class="flex flex_column flex_center">
+			<form action="#" method="POST" class='flex flex_center flex_column'>
+	
+				<header>
+					<h1>LOGIN</h1>
+				</header>
+	
+				<div class="form-group">
+					<input class='text-input' type="text" required placeholder="Username" name="username" id="username">
+				</div>
+				<div class="form-group password-input">
+					<input class='text-input' type="password" required placeholder="Password" name="password" id="password">
+					<div for="" class="password-see"></div>
+				</div>
+	
+				<div class="form-group">
+					<input type="submit" value="LOGIN">
+				</div>
+	
+				<div align=center>
+					<p>Haven't account yet</p>
+					<p><a href="/signup">Signup</a> Here</p>
+				</div>
+	
+			</form>
+			<div class="fail-msg">
+				<% if (err) { %>
+				<%= "Username or password is incorrect" %>
+				<% }%>
+			</div>
+		</main>
+		<script>
+			$(document).ready(()=>{
+				$('.password-see').on('mousedown', ()=>{
+					$('#password').attr('type', 'text');
+				});
+				$('.password-see').on('mouseup', ()=>{
+					$('#password').attr('type', 'password');
+				});
+			});
+		</script>
+</body>
+</html>
