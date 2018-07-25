@@ -1,0 +1,81 @@
+@import "..\\include\\_typo";
+@import "..\\include\\_flex";
+
+body {
+	margin: 0;
+	font-family: $fontSans;
+	font-weight: 500;
+}
+
+.sans-font {
+	font-family: $fontSans;
+}
+.serif-font {
+	font-family: $fontSerif;
+}
+
+.site {
+	@include displayFlex;
+	@include flexDirection(column);
+	height: 100vh;
+	width: 100%;
+
+	&-nav {
+		position: -moz-sticky;
+		position: -webkit-sticky;
+		position: sticky;
+		top: 0;
+		z-index: 9999;
+
+		a {
+			color: #fff;
+			&:visited {
+				color: #fff;
+			}
+		}
+	}
+
+	&-container { 
+		@include displayFlex;
+		@include flexGrow(1);
+		height: 100%;//firefox
+		@include flexDirection(column);
+		overflow: auto;
+	}
+}
+
+.site-notify {
+	position: relative;
+	&-icon {
+		visibility: hidden;
+		position: absolute;
+		display: inline-block;
+		bottom: -0.25rem; 
+		right: -0.25rem;
+		width: 0.5rem;
+		height: 0.5rem;
+		background-color: #f00;
+		border-radius: 50%;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		-ms-border-radius: 50%;
+		-o-border-radius: 50%;
+	}
+
+	&.is-notify {
+		color: #fff;
+		.site-notify-icon {
+			visibility: visible;
+		}
+	}
+}
+
+::-webkit-scrollbar, ::-moz-scrollbar {
+	width: 5px;
+	height: 5px;
+
+	&-thumb {
+		background-color: rgba(#333, 0.5);
+		border-radius: 10px;
+	}
+}

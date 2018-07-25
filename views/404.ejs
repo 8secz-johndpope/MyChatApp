@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%- include('includes/meta', {title: '404 Not Found'}) %>
+	<title>404 Not Found</title>
+	<%- include('includes/meta') -%>
 </head>
 <body>
-	<div class="flex flex_column flex_center" style='height: 100vh'>
-		<p>404 Not Found</p>
-		<p><a href="/">Return to homepage</a></p>
+	<%- include('includes/header') -%>
+	<div class="container site-container text-center">
+		<h1>404</h1>
+		<h2>Page <%= url %> doesn't exist</h2>
 	</div>
 </body>
 </html>

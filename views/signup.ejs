@@ -1,50 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<%- include("includes/meta", {title: 'SIGNUP | MY CHAT APP'}) %>
+	<title>SIGN UP - MY CHAT APP</title>
+	<%- include('includes/meta') %>
+	<link rel="stylesheet" href="/css/login.min.css">
 </head>
-<body>
-		<%- include('includes/noscript') %>
-		<main class="flex flex_column flex_center">
-			<form action="#" method="POST" class='flex flex_center flex_column'>
-	
-				<header>
-					<h1>LOGIN</h1>
-				</header>
-	
-				<div class="form-group">
-					<input class='text-input' type="text" required placeholder="Username" name="username" id="username">
-				</div>
-				<div class="form-group password-input">
-					<input class='text-input' type="password" required placeholder="Password" name="password" id="password">
-					<div for="" class="password-see"></div>
-				</div>
-	
-				<div class="form-group">
-					<input type="submit" value="LOGIN">
-				</div>
-	
-				<div align=center>
-					<p>Haven't account yet</p>
-					<p><a href="/signup">Signup</a> Here</p>
-				</div>
-	
-			</form>
-			<div class="fail-msg">
-				<% if (err) { %>
-				<%= "Username or password is incorrect" %>
-				<% }%>
+<body class='site d-flex justify-content-center align-items-center bg-dark'>
+	<form class='form rounded text-center' action="/signup" method="POST" enctype="multipart/form-data">
+		<big class='serif-font'>
+			<i class="fa fa-comments"></i>
+			MY CHAT APP
+		</big>
+		<div class='fail-msg text-danger'><%= (!!msg)?msg:"" %></div>
+		<div class='form-group'>
+			<small class="text-muted">Valid username: abc, cde123, xyz_09, ...</small><br>
+			<small class='text-danger' id="username-err"></small>
+			<input required class='form-control' type="text" name='username' id='username' placeholder="USERNAME">
+		</div>
+		<div class='form-group'>
+			<div id="img-preview">
+				<img src="" alt="">
 			</div>
-		</main>
-		<script>
-			$(document).ready(()=>{
-				$('.password-see').on('mousedown', ()=>{
-					$('#password').attr('type', 'text');
-				});
-				$('.password-see').on('mouseup', ()=>{
-					$('#password').attr('type', 'password');
-				});
+			<label class='btn btn-secondary' for="picture">Choose Avatar</label>
+			<input required type="file" accept="image/*" name='picture' id='picture'>
+		</div>
+		<div class="form-group">
+			<input class='form-control' type="password" required placeholder="PASSWORD" name="password" id="password">
+			<small class="text-warning" title="This website is develop by a student, the security is weak, you should not use by your facebook or gmail... password"><i class="fa fa-exclamation-triangle"></i> Shouldn't use your Facebook or Gmail password for my website</small><br>
+			<small class="text-warning" title="Trang web được làm bởi một thằng sinh viên gà, nên rất dễ bị rò rỉ thông tin, không nên sử dụng các mật khẩu của facebook hay gmail..."><i class="fa fa-exclamation-triangle"></i> Không nên lấy mật khẩu của Facebook hay Gmail đê sử dụng trang web này</small>
+		</div>
+		<div class="form-group">
+			<input class='form-control' type="password" required placeholder="COMFIRM PASSWORD" name="password-2" id="confirm-password">
+			<small class="text-danger" id="confirm-err"></small>
+		</div>
+		<div class='form-group'>
+			<input type="submit" id='submit' class='btn btn-primary btn-lg' value="SIGN UP">
+		</div>
+		<small>
+			Have an account? Login <a href="/login" class='btn btn-outline-success btn-sm'>here</a>
+		</small>
+	</form>
+	
+	<script>
+		$(document).ready(()=>{
+			$('#picture').on('change', function(){
+				const url = URL.createObjectURL(this.files[0]);
+				$('#img-preview img').attr('src', url);
+			})
+
+			$('#submit').attr('disabled', '');
+
+			$('#username').on('change', function(){
+				const name = $(this).val();
+
+				if (name.match(/^[a-zA-Z_0-9]+$/)) {
+					$(this).addClass('is-valid');
+					$(this).removeClass('is-invalid');
+					$('#username-err').text('');
+				}
+				else {
+					$(this).addClass('is-invalid');
+					$(this).removeClass('is-valid');
+					$('#username-err').text('Invalid');
+				}
+			})
+
+			$('#confirm-password').on('keyup', function(){
+				const pass = $('#password').val();
+				const pass2 = $(this).val();
+
+				if (pass == pass2) {
+					$('#submit').removeAttr('disabled');
+					$(this).removeClass('is-invalid');
+				}
+				else {
+					$('#submit').attr('disabled', '');
+					$(this).addClass('is-invalid');
+				}
 			});
-		</script>
+		});
+	</script>
 </body>
 </html>

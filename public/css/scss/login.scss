@@ -1,0 +1,21 @@
+@import "..\\include\\_typo.scss";
+
+#img-preview {
+	img {
+		width: 150px;
+		height: 150px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+}
+
+.form {
+	width: 300px;
+	margin: 0 auto;
+	padding: 2em;
+	background-color: #fff;
+
+	input[type=file] {
+		display: none;
+	}
+}

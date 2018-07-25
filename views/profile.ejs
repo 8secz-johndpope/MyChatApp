@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title><%= user.name %></title>
+	<%- include('includes/meta') -%>
+	<link rel="stylesheet" href="/css/profile.min.css">
+</head>
+<body>
+	<%- include('includes/header', {user: me}) %>
+	<div class="container-fluid profile-header p-0">
+		<div class="profile-bg d-flex justify-content-center align-items-center position-relative" style="background-image: url('<%= user.cover_image -%>')">
+			<h1 class="text-center serif-font text-light"><%= user.name %></h1>
+			<div class="profile-avatar user-pic">
+				<img src="<%=user.picture%>" alt="">
+			</div>
+		</div>
+	</div>
+	<main class="container site-container">
+		
+	</main>
+	<% if (me.name == user.name) { %>
+	<script src="/js/profile-owner.js"></script>
+	<% } %>
+</body>
+</html>

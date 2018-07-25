@@ -1,7 +1,10 @@
 {
-	"easysass.compileAfterSave": true,
-	"easysass.excludeRegex": "_.*.scss",
-	"easysass.targetDir": "public/css",
+	"node-module-intellisense.fileModuleExtensions": [
+		".js",
+		".coffee"
+	],
+	"easysass.excludeRegex": "(^_.*.scss)|(node_modules/*)",
+	"easysass.targetDir": "learn3/public/css",
 	"easysass.formats": [
 		{
 			"format": "compressed",

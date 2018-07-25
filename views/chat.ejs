@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title><%= username %> | MY CHAT APP</title>
+	<%-include('includes/meta')%>
+	<link rel="stylesheet" href="/css/chat.min.css">
+</head>
+<body class='site'>
+	<%- include('includes/header', {user: user}) %>
+	<main class="container p-0 site-container">
+		<section class="sidebar">
+			<section class="sidebar-element">
+				
+			</section>
+			<section class="sidebar-element">
+				<div id="all-user">
+
+				</div>
+			</section>
+		</section>
+		<div class="chat-area">
+			<div class="chat-user user in-chat">
+				<div id="user-pic" class='user-pic'>
+					<img src="" alt="">
+				</div>
+				<div id="user-name" class='user-name'></div>
+			</div>
+			<div class="chat-display" id="chat-content"></div>
+			<div class="chat-control d-flex flex-row align-items-stretch">
+				<textarea class='form-control' name="chat-msg" id="chat-msg" rows="2"></textarea>
+				<label class='btn btn-secondary chat-send-img' title='send image' for='image-file' id='send-image'>
+					<i class="fa fa-image"></i>
+					<input type="file" accept=".jpg,.jpeg,.png,.ico,.bmp" multiple=true name="image-file" id="image-file">
+				</label>
+				<button class='btn btn-primary' id='send'>SEND</button>
+				<div class="img-preview">
+					<!-- //list of image to send (in preview) -->
+					<div class="img-preview-slide" id="img-preview">
+						
+					</div>
+				</div>
+			</div>
+			<div class="row"></div>
+		</div>		
+	</main>
+
+
+	<script src="/js/chat.js"></script>
+</body>
+</html>

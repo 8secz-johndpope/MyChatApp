@@ -1,0 +1,19 @@
+@mixin displayFlex {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+
+@mixin flexDirection($arg) {
+	-webkit-flex-direction: $arg;
+	-ms-flex-direction: $arg;
+	flex-direction: $arg;
+}
+
+@mixin flexGrow($grow) {
+	-webkit-flex-grow: $grow;
+	-ms-flex-grow: $grow;
+	flex-grow: $grow;
+}

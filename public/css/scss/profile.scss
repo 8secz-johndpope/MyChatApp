@@ -1,0 +1,64 @@
+.profile {
+
+	&-header {
+		height: 300px;
+		border-bottom: 1em solid var(--dark);
+	}
+
+	&-bg {
+		height: 100%;
+		background-color: var(--secondary);
+		background-size: cover;
+	}
+
+	&-avatar {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, 50%);
+		width: 200px;
+		height: 200px;
+		border: 5px solid var(--dark);
+
+		&:hover {
+			.update-avatar {
+				opacity: 1;
+			}
+		}
+
+		.update-avatar {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			opacity: 0;
+			transition: 0.5s;
+			margin: 0;
+			text-align: center;
+			color: #fff;
+			font-size: 2em;
+
+			label {
+				margin: 0;
+			}
+
+			input[type=file] {
+				width: 0;
+				height: 0;
+				visibility: hidden;
+			}
+
+			#update-avatar, #discard-avatar {
+				display: none;
+			}
+		}
+		&.is-on-update {
+			.update-avatar {
+				opacity: 1;
+			}
+			#update-avatar, #discard-avatar {
+				display: inline-block;
+			}
+		}
+	}
+}
