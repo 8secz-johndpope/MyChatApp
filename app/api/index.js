@@ -1,9 +1,8 @@
 const api = require('express').Router();
 const database = require('../connect-mongo')();
 const mime = require('mime-types');
-const fileupload = require('express-fileupload');
-
-api.use(fileupload());
+const StoreImage = require('../store-image');
+const store = new StoreImage();
 
 api.get('/api/user/:username', async(req , res)=>{
 	// res.header({'Content-Type': 'application/json'});
@@ -86,10 +85,11 @@ api.post('/api/user/avatar', async (req, res)=>{
 	}
 
 	const file = req.files.avatar;
-	const newName = username+'.'+mime.getExtension(file.mimetype);
+	const newName = username+'.jpeg'; // always jpeg because StoreImage will processing to jpeg
 	
 	const db = await database.ready();
-	file.mv(__dirname + '../../public/avatar/'+newName , (err)=>{
+	await store.add(file.data);
+	store.save(__dirname + '../../public/avatar/'+newName , (err)=>{
 		if (err) {
 			res.send(JSON.stringify({
 				err: true,

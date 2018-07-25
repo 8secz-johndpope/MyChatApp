@@ -1,14 +1,10 @@
 {
-	"node-module-intellisense.fileModuleExtensions": [
-		".js",
-		".coffee"
-	],
-	"easysass.excludeRegex": "(^_.*.scss)|(node_modules/*)",
-	"easysass.targetDir": "learn3/public/css",
+	"easysass.excludeRegex": "^_.*.scss",
 	"easysass.formats": [
 		{
 			"format": "compressed",
 			"extension": ".min.css"
 		}
-	]
+	],
+	"easysass.targetDir": "public/css"
 }

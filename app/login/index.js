@@ -2,6 +2,8 @@ const login = require('express').Router();
 const database = require('../connect-mongo')();
 const bcrypt = require('bcrypt');
 const mime = require('mime-types');
+const StoreImage = require('../store-image');
+const store = new StoreImage();
 
 const SALT_ROUND = 10;
 
@@ -24,7 +26,7 @@ login.post('/signup', async (req, res)=>{
 	}
 
 	const picture = req.files.picture;
-	const newPicName = username + '.' + mime.extension(picture.mimetype);
+	const newPicName = username + '.jpeg'; //with StoreImage(sharp)- always to Jpeg
 	const db = await database.ready();
 
 	const arrayMatch = await db.collection('User')
@@ -37,7 +39,8 @@ login.post('/signup', async (req, res)=>{
 		return;
 	}
 
-	picture.mv(__dirname + '/../../public/avatar/' + newPicName, (err)=>{
+	await store.add(picture.data);
+	store.save(__dirname + '/../../public/avatar/' + newPicName, (err)=>{
 		if (err) {
 			res.render('signup', {msg: err+""});
 			return;
@@ -48,7 +51,8 @@ login.post('/signup', async (req, res)=>{
 		db.collection('User').insertOne({
 			name: username,
 			passhash: hash,
-			picture: `/avatar/${newPicName}`
+			picture: `/avatar/${newPicName}`,
+			cover_image: '/images/default_cover.jpg'
 		}, (err)=>{
 			if (err) {
 				res.render('signup', {msg: err + ''});

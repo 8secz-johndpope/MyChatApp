@@ -1,12 +1,5 @@
 const app = require('express').Router();
-const fileupload = require('express-fileupload');
-const mime = require('mime-types');
-const database = require('./connect-mongo')();
 const myFunc = require('../myFunc');
-const login = require('./login');
-
-app.use(fileupload());
-app.use(login);
 
 app.get('/', async (req, res)=>{
 	if (!req.session || !req.session.user) {
@@ -19,10 +12,10 @@ app.get('/', async (req, res)=>{
 });
 
 //middleware
+app.use(require('./login'));
 app.use(require('./chat'));
 app.use(require('./api'));
 app.use(require('./profile'));
-
 
 //404
 app.use(async (req, res, next)=>{

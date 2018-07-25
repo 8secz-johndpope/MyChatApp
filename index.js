@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const myFunc = require('./myFunc');
 const session = require('./app/session');
 const sharedsession = require('express-socket.io-session')(session);
+const fileupload = require('express-fileupload');
 
 const ConnectMongo = require('./app/connect-mongo');
 const database = new ConnectMongo();
@@ -43,14 +44,20 @@ database.ready(async (db)=>{
 
 //server
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json({
+	limit: "5mb"
+}));
+app.use(bodyParser.urlencoded({
+	limit: '5mb',
+	extended: true
+}));
+app.use(fileupload());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(session);
 
 //library for client
-app.use('/lib/socket.io', express.static(__dirname + '/../node_modules/socket.io-client/dist'));
+app.use('/lib/socket.io', express.static(__dirname + '/node_modules/socket.io-client/dist'));
 
 //app router
 app.use(require('./app'));

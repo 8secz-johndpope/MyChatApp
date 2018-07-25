@@ -39,28 +39,27 @@
 
 			$.ajax({
 				url: '/api/user/avatar',
-				type: 'POST',
+				method: "POST",
 				xhrFields: {
 					withCredentials: true
 				},
 				processData: false,
+				// contentType: false,
 				data: fd,
 				dataType: 'json',
 				success: (json)=>{
 					if (json.err) {
 						alert(json.msg);
-						window.location.reload();
+						// window.location.reload();
 					}
 					const newUrl = json.new_picture_url;
 					avatar.find('img').attr('src', newUrl);
 				},
 				error: (err)=>{
-					alert(err);
-					window.location.reload();
+					alert(err + "");
+					// window.location.reload();
 				}
 			})
 		});
 	}
-
-
 })(jQuery);
