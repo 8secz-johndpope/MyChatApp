@@ -63,7 +63,7 @@ app.use(session);
 app.use('/lib/socket.io', express.static(__dirname + '/node_modules/socket.io-client/dist'));
 
 //app router
-app.use(require('./app')(database));
+app.use(require('./app/index')(database));
 
 //io
 const ioServer = require('./app/socket')(http, database);
