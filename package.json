@@ -1,14 +1,14 @@
 {
-  "name": "learnMongoDB",
+  "name": "chat_app",
   "version": "1.0.0",
   "description": "",
-  "main": "run.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "beohoang98",
   "license": "ISC",
   "dependencies": {
     "@types/jquery": "^3.3.5",
