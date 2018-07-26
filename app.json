@@ -1,0 +1,6 @@
+{
+	"name": "my Chat App",
+	"description": "Social Chat website write in NodeJS (project for learning NodeJS)",
+	"logo": "public/images/favicon.png",
+	"image": "heroku/nodejs"
+}

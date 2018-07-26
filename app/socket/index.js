@@ -5,7 +5,6 @@ module.exports = function(http, database = require('../connect-mongo')())
 	const userActive = {};
 
 	io.on('connect', (sock)=>{
-		console.log('Socket: User connected');
 		const username = sock.handshake.session.user;
 
 		userActive[username] = sock;
@@ -66,7 +65,6 @@ module.exports = function(http, database = require('../connect-mongo')())
 		sock.on('disconnect', (why)=>{
 			UpdateUserList();
 			delete userActive[username];
-			console.log('Socket: User disconnect : '+why);
 		});
 	});
 
