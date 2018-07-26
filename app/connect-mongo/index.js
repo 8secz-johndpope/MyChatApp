@@ -1,23 +1,31 @@
 const config = require('../../config.json');
 const URL = require('url');
+let DB_URL;
+let DB_NAME;
+
+if (process.env.NODE_ENV === 'production')
+{
+	DB_URL = process.env['mlab_mongo_url'];
+}
+else {
+	DB_URL = config.LOCAL_DATABASE_URL;
+}
+
+DB_NAME = URL.parse(DB_URL).path.replace('/', '');
 
 module.exports = function()
 {
 	this.db = null;
 
-	const path = URL.parse(config.DATABASE_URL);
-	const dbname = path.pathname.replace('/','');
-	const url = `mongodb://${path.hostname}:${path.port}/${dbname}`;
-
-	console.log('\x1b[36m', 'Database:', '\x1b[0m', ' Connect to '+url);
+	console.log('\x1b[36m%s\x1b[0m: %s', 'Database', 'Connect to '+DB_URL);
 
 	this.ready = async function (callback)
 	{
 		if (this.db) return this.db;
 
 		const MongoClient = require('mongodb').MongoClient;
-		const dbo = await MongoClient.connect(url, {useNewUrlParser: true});
-		this.db = dbo.db(dbname);
+		const dbo = await MongoClient.connect(DB_URL, {useNewUrlParser: true});
+		this.db = dbo.db(DB_NAME);
 		if (typeof callback == 'function') callback(this.db);
 		return this.db;
 	}
