@@ -62,6 +62,18 @@
 	height: 100%; //firefox
 	overflow: hidden;
 	@include flexGrow(1);
+
+	.user-pic {
+		z-index: 100;
+		box-shadow: 0px 10px 30px -9px rgba(#000, 0.4);
+	}
+
+	#see-more {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translate(-50%, 0);
+	}
 }
 .chat-display {
 	height: 100%; //firefox

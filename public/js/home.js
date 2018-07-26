@@ -37,7 +37,7 @@ function createUserPanel(user)
 			<div class='user-pic'>
 				<img src='${user.picture}' alt='avatar of ${user.name}'/>
 			</div>
-			<div class='card-title'>${user.name}</div>
+			<h4 class='card-title serif-font'>${user.name}</h4>
 			<div class='card-text ${classStatus}'>${user.status}</div>
 			<a class='btn btn-primary' href='/profile/${user.name}'>Go to profile</a>
 		</div>

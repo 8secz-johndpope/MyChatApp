@@ -1,5 +1,7 @@
 (function($){
 	const socket = io();
+	const LIMIT_GET_MESSAGE = 10;
+	let currentOffsetMessage = 0;
 	
 	const arrImgToSend = {};
 	let totalSize = 0;
@@ -8,7 +10,16 @@
 	let currentUser;
 	let myName;
 
-	socket.on('res msg with', (arrMsg)=>{
+	socket.on('res msg with', (data)=>{
+		const type = data.type;
+		const arrMsg = data.arrMsg;
+		currentOffsetMessage += LIMIT_GET_MESSAGE;
+
+		if (arrMsg.length < LIMIT_GET_MESSAGE)
+		{
+			$('#see-more').text('No more message').off('click').addClass('text-secondary');
+		}
+
 		for (const msg of arrMsg)
 		{
 			// console.log(msg);
@@ -16,7 +27,7 @@
 				username: msg.user_send,
 				msg: msg.msg,
 				imgs: msg.imgs
-			});
+			}, type);
 		}
 	});
 
@@ -29,13 +40,28 @@
 			return;
 		}
 
-		console.log(data);
-
 		displayMessage(myName, {
 			username: data.username,
 			msg: data.msg,
 			imgs: data.imgs
-		})
+		}, 1);
+
+	})
+
+	socket.on('update user list', (data)=>{
+		for (const user of data.arr)
+		{
+			if (currentUser == user.name)
+			{
+				if (user.status == 'active')
+				{
+					$('#chat-user-status').addClass('text-success').text('Active now');
+				}
+				else {
+					$('#chat-user-status').addClass('text-secondary').text('Offline');
+				}
+			}
+		}
 	})
 
 	async function initChat()
@@ -53,7 +79,8 @@
 		socket.emit('get msg with', {
 			username: currentUser,
 			offset: 0,
-			limit: 10
+			limit: LIMIT_GET_MESSAGE,
+			type: 1
 		})
 	}
 
@@ -132,6 +159,16 @@
 				alert(err);
 			}
 		})
+
+		//see more message
+		$('#see-more').on('click', ()=>{
+			socket.emit('get msg with', {
+				username: currentUser,
+				offset: currentOffsetMessage,
+				limit: LIMIT_GET_MESSAGE,
+				type: -1 //older
+			})
+		})
 	})
 
 	
@@ -167,12 +204,13 @@ async function getMyInfo()
 	return json;
 }
 
-function displayMessage(myName, msgInfo)
+function displayMessage(myName, msgInfo, type)
 {
 	const user = msgInfo.username;
 	const msg = msgInfo.msg;
 	const imgs = msgInfo.imgs;
 	const isMe = (myName==user)?'me':'';
+	const chatDiv = $('#chat-content');
 
 	const div = $('<div/>').addClass('chat-mes '+isMe).html(`
 		<div class='chat-mes-wrap'><div class='chat-mes-user'>${user}</div></div>
@@ -185,8 +223,13 @@ function displayMessage(myName, msgInfo)
 	}
 	div.append(imgDiv);
 
-	$('#chat-content').append(div);
-	scrollNewMessage();
+	if (type == 1) { //newer
+		chatDiv.append(div);
+		scrollNewMessage();
+	} else {//older
+		chatDiv.prepend(div);
+	}
+	
 }
 
 function scrollNewMessage()
