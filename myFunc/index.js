@@ -1,9 +1,8 @@
-module.exports = {
-	database : require('../app/connect-mongo')(),
-
-	getUserInfo: async function (username)
+module.exports = function(database = require('../app/connect-mongo')())
+{
+	this.getUserInfo = async function (username)
 	{
-		const db = await this.database.ready();
+		const db = await database.ready();
 		const info = await db.collection('User').find({name: username}).toArray();
 
 		if (info.length == 0) {
@@ -20,11 +19,29 @@ module.exports = {
 		}
 	},
 
-	checkSession: async function (req, res, next) {
-		if (!req.session || !req.session.user)
+	this.checkSession = function (success = (req, res)=>any) {
+		return async function(req, res, next)
 		{
-			res.redirect('/login');
-			next();
+			if (!req.session || !req.session.user)
+			{
+				res.redirect('/login');
+				return;
+			}
+			
+			const db = await database.ready();
+			const match = await db.collection('User').find({name: req.session.user}).toArray();
+
+			if (match.length > 0)
+			{
+				req.user_info = match[0];
+				success(req, res, next);
+			}
+			else {
+				req.session = null;
+				res.redirect('login');
+			}
 		}
 	}
+
+	return this;
 }

@@ -11,32 +11,35 @@ const ConnectMongo = require('./app/connect-mongo');
 const database = new ConnectMongo();
 const PORT = process.env.PORT || 80;
 
-database.ready(async (db)=>{
-	console.log('Database is ready');
+function myLog(name, str)
+{
+	console.log('\x1b[36m%s\x1b[0m: %s', name, str);
+}
 
+database.ready(async (db)=>{
 	const matchUserCol = await db.listCollections({name: 'User'}).toArray()
 	const matchChatCol = await db.listCollections({name: 'Chat'}).toArray()
 	
 	if (matchUserCol.length > 0) {
-		console.log('Database: User exists, skip');
+		myLog('Database', 'User exists, skip..')
 	}
 	else {
-		console.log('Database: User not exist, wait for create...');
+		myLog('Database', 'User Collection not exist, wait for create...');
 		db.createCollection('User', (err)=>{
 			if (err) throw err;
-			console.log('Database: User created');
+			myLog('Database', 'User Collection created');
 		});
 	}
 
 	if (matchChatCol.length > 0)
 	{
-		console.log('Database: Chat exists, skip');
+		myLog('Database', 'Chat Collection exists, skip');
 	}
 	else {
-		console.log('Database: Chat not exist, wait for create...');
+		myLog('Database', 'Chat Collection not exist, wait for create...');
 		db.createCollection('Chat', (err)=>{
 			if (err) throw err;
-			console.log('Database: Chat created');
+			myLog('Database', 'Chat Collection created');
 		});
 	}
 })
@@ -60,10 +63,10 @@ app.use(session);
 app.use('/lib/socket.io', express.static(__dirname + '/node_modules/socket.io-client/dist'));
 
 //app router
-app.use(require('./app'));
+app.use(require('./app')(database));
 
 //io
-const ioServer = require('./app/socket')(http);
+const ioServer = require('./app/socket')(http, database);
 //share session with socket-io
 ioServer.use(sharedsession);
 
@@ -72,3 +75,8 @@ http.listen(PORT, ()=>{
 	console.log('Server listen on http://localhost:' + PORT + '/');
 	console.log('Wait for database...');
 })
+
+process.on('unhandledRejection', function(err){
+	console.log('\x1b[35m%s:\x1b[0m %s', 'Error', err + "");
+	throw err;
+});

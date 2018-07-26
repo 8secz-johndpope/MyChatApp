@@ -1,17 +1,16 @@
+'use strict'
+
+module.exports = function(database = require('../connect-mongo')())
+{
+
 const profile = require('express').Router();
-const myFunc = require('../../myFunc');
+const myFunc = require('../../myFunc')(database);
 
-profile.get('/profile/:username', async (req, res)=>{
-	if (!req.session || !req.session.user)
-	{
-		res.redirect('/login');
-		return;
-	}
-
+profile.get('/profile/:username', myFunc.checkSession(async (req, res)=>{
 	try {
 		const username = req.params.username;
 		const userInfo = await myFunc.getUserInfo(username);
-		const myInfo = await myFunc.getUserInfo(req.session.user);
+		const myInfo = req.user_info;
 
 		res.render('profile', {me: myInfo, user: userInfo});
 	}
@@ -19,16 +18,12 @@ profile.get('/profile/:username', async (req, res)=>{
 	{
 		res.status(500).send(e+"");
 	}
-});
+}))
 
-profile.get('/profile', (req, res)=>{
-	if (!req.session || !req.session.user)
-	{
-		res.redirect('/login');
-		return;
-	}
+profile.get('/profile', myFunc.checkSession((req, res)=>{
+	res.redirect('/profile/'+req.user_info.name);
+}))
 
-	res.redirect('/profile/'+req.session.user);
-});
 
-module.exports = profile;
+return profile;
+}

@@ -1,37 +1,46 @@
-class StoreImage {
-	constructor()
-	{
-		this.database = require("../connect-mongo")();
-		this.sharp = require('sharp');
-		this.data = null;
-	}
+/**
+ * this object is write for store image easiser
+ * I prepare to store with online storage server, or just localfile
+ */
 
-	/**
-	 * add data image to sharp
-	 * @param {String | Buffer} buffer 
-	 * @param { {width: number, quality: number } } opts quality: 0-100
-	 */
-	async add(buffer, opts = { width: 320, quality: 70 })
-	{
-		let obj = this.sharp(buffer);
-		if (opts.width) obj = obj.resize(opts.width);
-		this.data = await obj.resize(opts.width)
-							.jpeg({quality: opts.quality})
-							.toBuffer();
-	}
+StoreImage = function()
+{
+	const sharp = require('sharp');
+	const fs = require('fs');
+	let data = Buffer(''); //just for interface
 
 	/**
 	 * 
+	 * @param {String | Buffer} buffer 
+	 * @param {{width: number, quality: number}} opts 
+	 */
+	this.add = async (buffer, opts = { width: 320, quality: 70 })=>{
+		let obj = sharp(buffer);
+		if (opts.width) obj = obj.resize(opts.width);
+		data = await obj.resize(opts.width)
+						.jpeg({quality: opts.quality})
+						.toBuffer();
+	}
+
+	/**
+	 * @return {Promise<NodeJS.ErrnoException>}
 	 * @param {String} name name of file, exclude path & extension 
 	 * @param {(err)=>any} callback 
 	 */
-	save(pathfile, callback)
+	this.save = function (pathfile = require, callback = (err)=>any)
 	{
-		const fs = require('fs');
-		fs.writeFile(pathfile, this.data, (err)=>{
-			callback(err);
-		});
+		return new Promise((resolve, reject)=>{
+			fs.writeFile(pathfile, data, (err)=>{
+				callback(err);
+				if (err) {
+					reject(err);
+				}
+				resolve(null)
+			});
+		})
 	}
-}
+
+	return this;
+} 
 
 module.exports = StoreImage;

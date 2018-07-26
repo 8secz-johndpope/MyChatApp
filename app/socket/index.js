@@ -1,7 +1,6 @@
-module.exports = function(http)
+module.exports = function(http, database = require('../connect-mongo')())
 {	
 	const io = require('socket.io')(http);
-	const database = require('../connect-mongo')();
 	let userArr = [];
 	const userActive = {};
 
@@ -27,7 +26,7 @@ module.exports = function(http)
 			if (userActive[othername]) {
 				userActive[othername].emit('receive chat', dataSend)
 			}
-			sock.emit('receive chat', dataSend);
+			if (othername != username) sock.emit('receive chat', dataSend);
 
 			const db = await database.ready();
 			db.collection('Chat').insertOne({
@@ -43,7 +42,12 @@ module.exports = function(http)
 			const othername = data.username;
 			const offset = data.offset;
 			const limit = data.limit;
+			const type = (data.type == -1) ? -1 : 1; // -1: older,  1: newer
 			const db = await database.ready();
+			const dataSend = {
+				type: type,
+				arrMsg: []
+			}
 
 			const arrMsg = await db.collection('Chat').find({
 				$or: [
@@ -52,7 +56,11 @@ module.exports = function(http)
 				]
 			}).sort({time: -1}).skip(offset).limit(limit).toArray();
 
-			sock.emit('res msg with', arrMsg.sort((a, b)=>a.time-b.time));
+			dataSend.arrMsg = arrMsg.sort((a, b)=>{
+				return (a.time - b.time)*type;
+			});
+
+			sock.emit('res msg with', dataSend);
 		})
 
 		sock.on('disconnect', (why)=>{

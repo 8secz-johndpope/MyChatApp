@@ -1,11 +1,12 @@
-const login = require('express').Router();
-const database = require('../connect-mongo')();
-const bcrypt = require('bcrypt');
-const mime = require('mime-types');
-const StoreImage = require('../store-image');
-const store = new StoreImage();
+module.exports = function (database = require('../connect-mongo')())
+{
 
-const SALT_ROUND = 10;
+const login = require('express').Router();
+const myFunc = require('../../myFunc')(database);
+
+const bcrypt = require('bcrypt');
+const config = require('../../config.json');
+const store = require('../store-image')();
 
 login.get('/signup', (req, res)=>{
 	if (req.session && req.session.user) {
@@ -46,7 +47,7 @@ login.post('/signup', async (req, res)=>{
 			return;
 		}
 
-		const hash = bcrypt.hashSync(password, SALT_ROUND);
+		const hash = bcrypt.hashSync(password, config.HASH.SALT_ROUND);
 
 		db.collection('User').insertOne({
 			name: username,
@@ -59,7 +60,7 @@ login.post('/signup', async (req, res)=>{
 				return;
 			}
 			req.session.user = username;
-			// req.session.save();
+			req.session.save();
 			res.redirect('/');
 		});
 
@@ -85,7 +86,7 @@ login.post('/login', async (req, res)=>{
 	const db = await database.ready();
 	const match = await db.collection('User').find({name: username}).toArray();
 	if (!match || match.length == 0) {
-		done(null, false, {message: 'Login failed'});
+		res.render('login', {msg: 'Login failed'});
 		return;
 	}
 
@@ -109,4 +110,6 @@ login.get('/logout', (req, res)=>{
 	res.redirect('/login');
 })
 
-module.exports = login;
+
+return login;
+}

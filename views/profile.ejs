@@ -15,8 +15,12 @@
 			</div>
 		</div>
 	</div>
-	<main class="container site-container">
-		
+	<main class="container site-container" style='padding-top: 100px'>
+		<div class="d-flex justify-content-center">
+			<% if (me.name != user.name) { %>
+			<a href="/chat/<%=user.name-%>" class='btn btn-primary'><i class="fa fa-comments"></i> CHAT</a>
+			<% } %>
+		</div>
 	</main>
 	<% if (me.name == user.name) { %>
 	<script src="/js/profile-owner.js"></script>

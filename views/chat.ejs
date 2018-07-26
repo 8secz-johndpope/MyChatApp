@@ -8,24 +8,18 @@
 <body class='site'>
 	<%- include('includes/header', {user: user}) %>
 	<main class="container p-0 site-container">
-		<section class="sidebar">
-			<section class="sidebar-element">
-				
-			</section>
-			<section class="sidebar-element">
-				<div id="all-user">
-
-				</div>
-			</section>
-		</section>
 		<div class="chat-area">
-			<div class="chat-user user in-chat">
+			<div class="mx-auto d-flex align-items-center">
+				<div id="user-name" class='user-name pr-4'></div>
 				<div id="user-pic" class='user-pic'>
 					<img src="" alt="">
 				</div>
-				<div id="user-name" class='user-name'></div>
+				<div id='chat-user-status' class='pl-4'></div>
 			</div>
-			<div class="chat-display" id="chat-content"></div>
+			<div class="chat-display position-relative" id="chat-content">
+				<a id="see-more" href='#' class='position-absolute'>See more</a>
+				<div id="scroll-pin"></div>
+			</div>
 			<div class="chat-control d-flex flex-row align-items-stretch">
 				<textarea class='form-control' name="chat-msg" id="chat-msg" rows="2"></textarea>
 				<label class='btn btn-secondary chat-send-img' title='send image' for='image-file' id='send-image'>
