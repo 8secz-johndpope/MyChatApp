@@ -1,13 +1,17 @@
-const database = require('../app/connect-mongo');
+const database = require('../connect-mongo');
 const assert = require('assert');
 
 describe('Database', ()=>{
 	describe('Connect', ()=>{
 		it('Check connect', (done)=>{
 			database.ready().then(db=>{
-				assert.notEqual(undefined, db);
-				database.close();
-				done();
+				if (!db) done('null database');
+				else {
+					database.close();
+					done();
+				}
+			}).catch(err=>{
+				done(err);
 			})
 		})
 	})

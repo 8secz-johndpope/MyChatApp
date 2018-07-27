@@ -1,4 +1,4 @@
-const store = require('../app/store-image')();
+const store = require('../store-image')();
 const assert = require('assert');
 
 describe('Test Store', ()=>{

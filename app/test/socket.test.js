@@ -1,6 +1,6 @@
-const Socket = require('../app/socket');
+const Socket = require('../socket');
 const assert = require('assert');
-const database = require('../app/connect-mongo');
+const database = require('../connect-mongo');
 const http = require('http').createServer();
 
 describe('Test Socket', ()=>{
