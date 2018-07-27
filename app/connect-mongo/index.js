@@ -13,22 +13,30 @@ else {
 
 DB_NAME = URL.parse(DB_URL).path.replace('/', '');
 
-module.exports = function()
+function ConnectMongo()
 {
 	this.db = null;
-
+	this.dbo = null;
 	console.log('\x1b[36m%s\x1b[0m: %s', 'Database', 'Connect to '+DB_URL);
-
-	this.ready = async function (callback)
-	{
-		if (this.db) return this.db;
-
-		const MongoClient = require('mongodb').MongoClient;
-		const dbo = await MongoClient.connect(DB_URL, {useNewUrlParser: true});
-		this.db = dbo.db(DB_NAME);
-		if (typeof callback == 'function') callback(this.db);
-		return this.db;
-	}
-
-	return this;
 }
+
+ConnectMongo.prototype.ready = async function (callback)
+{
+	if (this.db) return this.db;
+	const MongoClient = require('mongodb').MongoClient;
+	const dbo = await MongoClient.connect(DB_URL, {useNewUrlParser: true});
+	
+	this.db = dbo.db(DB_NAME);
+	this.dbo = dbo;
+
+	if (typeof callback == 'function') callback(this.db);
+	return this.db;
+}
+
+ConnectMongo.prototype.close = function (){
+	this.ready().then(()=>{
+		this.dbo.close();
+	})
+}
+
+module.exports = new ConnectMongo();

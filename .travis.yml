@@ -1,7 +1,15 @@
 language:
   node_js
+node_js:
+  "node"
 install:
-  - npm install -g codecov
+  - npm install
+  - npm install --save-dev nyc
+  - npm install -g mocha
+  - npm install --save-dev coveralls
 script:
-  - istanbul cover mocha --reporter lcovonly -- -R spec
-  - codecov
+  - npm test
+after_success:
+  - npm run coveralls
+env:
+  - is_in_travis=true

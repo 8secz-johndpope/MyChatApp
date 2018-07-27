@@ -8,6 +8,9 @@ I'm still learning Node and the app still in development so it will be a lot of 
 
 If you love it, [fork my repos](https://github.com/beohoang98/myChatApp/fork) and [develop](https://github.com/beohoang98/MyChatApp/pulls) it with me <3
 
+[![Build Status](https://travis-ci.org/beohoang98/MyChatApp.svg?branch=master)](https://travis-ci.org/beohoang98/MyChatApp)
+[![Coverage Status](https://coveralls.io/repos/github/beohoang98/MyChatApp/badge.svg)](https://coveralls.io/github/beohoang98/MyChatApp)
+
 ---
 
 ## Library and Stack:
