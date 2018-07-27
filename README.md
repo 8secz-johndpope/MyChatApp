@@ -13,7 +13,7 @@ If you love it, [fork my repos](https://github.com/beohoang98/myChatApp/fork) an
 ## Library and Stack:
 
 Server:
-- [ejs] - for create server-side and render views
+- [express] and [ejs] - for create server-side and render views
 - [mongodb] - for storing user infomation and chat history
 - [cookie-session] - for storing session in client cookie
 - [body-parser] - read post request
@@ -42,7 +42,19 @@ I'm study and learn best practices from
 
 ---
 
-## Things 
+## Things learned
+
+- [X] Create server with [node] and [express]
+- [X] Checking user login by [cookie-session]
+- [X] Store user and chat infomation by [mongodb]
+- [X] Get post data and file with [express-fileupload]
+- [X] Compress file for limited storage (with [sharp])
+- [ ] Store file, image to File Storage instead storage of server
+- [ ] User can send **emoji** and **image** to each others
+- [ ] User can **play games** with each others
+- [ ] User can make change personal profile
+- [ ] Privacy on user
+- etc...i haven't think more yet
 
 ## Try it `(if you love my project)`
 
