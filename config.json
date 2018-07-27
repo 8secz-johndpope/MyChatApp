@@ -1,7 +1,7 @@
 {
 	"keys": [
 		"this_is_just_for_local",
-		"server_i_will_config_to_env"
+		"in_server_i_will_config_to_env"
 	],
 	"LOCAL_DATABASE_URL": "mongodb://127.0.0.1:27017/chatApp",
 	"HASH": {
