@@ -1,5 +1,7 @@
-module.exports = function(http, database = require('../connect-mongo')())
+const Socket = function(http, database)
 {	
+	if (!database) throw new Error('Missing parameter database');
+
 	const io = require('socket.io')(http);
 	let userArr = [];
 	const userActive = {};
@@ -101,3 +103,4 @@ module.exports = function(http, database = require('../connect-mongo')())
 	return io;
 }
 
+module.exports = Socket;

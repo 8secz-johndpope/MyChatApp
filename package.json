@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "coveralls": "npm test app/* && npm run coverage app/*",
+    "coveralls": "npm test mocha test app/* && npm run coverage",
     "start": "node index.js"
   },
   "keywords": [],

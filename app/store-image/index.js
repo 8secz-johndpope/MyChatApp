@@ -7,19 +7,33 @@ StoreImage = function()
 {
 	const sharp = require('sharp');
 	const fs = require('fs');
-	let data = Buffer(''); //just for interface
+	let data;
 
 	/**
 	 * 
 	 * @param {String | Buffer} buffer 
-	 * @param {{width: number, quality: number}} opts 
+	 * @param {{width ?: 320, quality ?: 70}} opts 
 	 */
-	this.add = async (buffer, opts = { width: 320, quality: 70 })=>{
-		let obj = sharp(buffer);
-		if (opts.width) obj = obj.resize(opts.width);
-		data = await obj.resize(opts.width)
-						.jpeg({quality: opts.quality})
-						.toBuffer();
+	this.add = async (buffer, opts = {width: 320, quality: 70})=>{
+		if (!buffer) return false;
+
+		if (!opts.width) opts.width = 320;
+		if (!opts.quality) opts.quality = 70;
+
+		
+		try {
+			let obj = sharp(buffer);
+			
+			if (opts.width) obj = obj.resize(opts.width);
+			
+			data = await obj.resize(opts.width)
+							.jpeg({quality: opts.quality})
+							.toBuffer();
+		} catch (err) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -27,15 +41,20 @@ StoreImage = function()
 	 * @param {String} name name of file, exclude path & extension 
 	 * @param {(err)=>any} callback 
 	 */
-	this.save = function (pathfile = require, callback = (err)=>any)
+	this.save = function (pathfile, callback)
 	{
 		return new Promise((resolve, reject)=>{
+			if (!data) reject("No data");
+			
 			fs.writeFile(pathfile, data, (err)=>{
-				callback(err);
+				
+				if (typeof callback == 'function') callback(err);
+				
 				if (err) {
 					reject(err);
 				}
-				resolve(null)
+				
+				resolve(true)
 			});
 		})
 	}
