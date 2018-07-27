@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "coverage": "nyc report --reporter=text-lcov | node_module/coveralls/bin/coveralls",
     "start": "node index.js"
   },
   "keywords": [],
@@ -25,5 +26,8 @@
     "sharp": "^0.20.5",
     "socket.io": "^2.1.1",
     "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.2"
   }
 }
