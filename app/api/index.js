@@ -3,6 +3,8 @@
 const api = require('express').Router();
 const mime = require('mime-types');
 const store = require('../store-image')();
+const Logger = require('../logging');
+const path = require('path');
 
 /**
  * 
@@ -72,7 +74,6 @@ function init(database)
 	})
 	
 	api.post('/api/user/avatar', async (req, res)=>{
-	
 		if (!req.session || !req.session.user) {
 			res.send(JSON.stringify({
 				err: true,
@@ -81,7 +82,7 @@ function init(database)
 			return;
 		}
 		const username = req.session.user;
-	
+
 		if (!req.files || !req.files.avatar)
 		{
 			res.send(JSON.stringify({
@@ -96,7 +97,7 @@ function init(database)
 		
 		const db = await database.ready();
 		await store.add(file.data);
-		store.save(__dirname + '../../public/avatar/'+newName , (err)=>{
+		store.save(path.join(__dirname + '/../../public/avatar/') + newName , (err)=>{
 			if (err) {
 				res.send(JSON.stringify({
 					err: true,

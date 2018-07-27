@@ -11,38 +11,8 @@ const ConnectMongo = require('./app/connect-mongo');
 const database = new ConnectMongo();
 const PORT = process.env.PORT || 80;
 
-function myLog(name, str)
-{
-	console.log('\x1b[36m%s\x1b[0m: %s', name, str);
-}
+const Logger = require('./app/logging');
 
-database.ready(async (db)=>{
-	const matchUserCol = await db.listCollections({name: 'User'}).toArray()
-	const matchChatCol = await db.listCollections({name: 'Chat'}).toArray()
-	
-	if (matchUserCol.length > 0) {
-		myLog('Database', 'User exists, skip..')
-	}
-	else {
-		myLog('Database', 'User Collection not exist, wait for create...');
-		db.createCollection('User', (err)=>{
-			if (err) throw err;
-			myLog('Database', 'User Collection created');
-		});
-	}
-
-	if (matchChatCol.length > 0)
-	{
-		myLog('Database', 'Chat Collection exists, skip');
-	}
-	else {
-		myLog('Database', 'Chat Collection not exist, wait for create...');
-		db.createCollection('Chat', (err)=>{
-			if (err) throw err;
-			myLog('Database', 'Chat Collection created');
-		});
-	}
-})
 
 
 //server
@@ -70,13 +40,43 @@ const ioServer = require('./app/socket')(http, database);
 //share session with socket-io
 ioServer.use(sharedsession);
 
-//listen
-http.listen(PORT, ()=>{
-	console.log('Server listen on http://localhost:' + PORT + '/');
-	console.log('Wait for database...');
+
+database.ready(async (db)=>{
+	const matchUserCol = await db.listCollections({name: 'User'}).toArray()
+	const matchChatCol = await db.listCollections({name: 'Chat'}).toArray()
+	
+	if (matchUserCol.length > 0) {
+		Logger.log('info', 'User exists, skip..')
+	}
+	else {
+		Logger.log('info', 'User Collection not exist, wait for create...');
+		db.createCollection('User', (err)=>{
+			if (err) throw err;
+			Logger.log('info', 'User Collection created');
+		});
+	}
+
+	if (matchChatCol.length > 0)
+	{
+		Logger.log('info', 'Chat Collection exists, skip');
+	}
+	else {
+		Logger.log('info', 'Chat Collection not exist, wait for create...');
+		db.createCollection('Chat', (err)=>{
+			if (err) throw err;
+			Logger.log('info', 'Chat Collection created');
+		});
+	}
+
+	//listen
+	http.listen(PORT, ()=>{
+		console.log('Server listen on http://localhost:' + PORT + '/');
+		console.log('Start...');
+	})
 })
 
-process.on('unhandledRejection', function(err){
-	console.log('\x1b[35m%s:\x1b[0m %s', 'Error', err + "");
-	throw err;
-});
+
+
+process.on('unhandledRejection', (reject)=>{
+	Logger.warn(reject + '');
+})

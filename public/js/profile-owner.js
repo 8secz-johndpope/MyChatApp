@@ -33,7 +33,7 @@
 
 		$('#update-avatar').click(function(){
 			const fd = new FormData();
-			fd.append('file', file);
+			fd.append('avatar', file, 'avatar.jpg');
 
 			console.log(fd);
 
@@ -44,7 +44,7 @@
 					withCredentials: true
 				},
 				processData: false,
-				// contentType: false,
+				contentType: false,
 				data: fd,
 				dataType: 'json',
 				success: (json)=>{
