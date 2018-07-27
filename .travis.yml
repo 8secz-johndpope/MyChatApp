@@ -4,4 +4,4 @@ install:
   - npm install -g nyc
   - npm install -g mocha
 script:
-  - nyc mocha app/
+  - npm test "app/*"
