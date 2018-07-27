@@ -2,6 +2,5 @@ node_modules/
 start_local_mongo
 public/avatar/*
 logs/
-.coveralls.yml
 coverage/
 .nyc_output/
