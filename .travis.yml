@@ -8,6 +8,6 @@ install:
   - npm install -g mocha
   - npm install --save-dev coveralls
 script:
-  - npm test app/*
+  - npm test
 after_success:
   - npm run coveralls
