@@ -11,3 +11,5 @@ script:
   - npm test
 after_success:
   - npm run coveralls
+env:
+  - is_in_travis=true
