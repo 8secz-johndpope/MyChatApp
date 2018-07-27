@@ -4,7 +4,10 @@ node_js:
   "node"
 install:
   - npm install
-  - npm install -g nyc
+  - npm install --save-dev nyc
   - npm install -g mocha
+  - npm install --save-dev coveralls
 script:
   - npm test app/*
+after_success:
+  - npm run coveralls
