@@ -70,7 +70,12 @@ git clone https://github.com/beohoang98/MyChatApp.git
 cd MyChatApp
 ```
 
-Config your server and database on file `config.json`
+Install package:
+```bash
+npm install
+```
+
+Then, config your server and database on file `config.json`
 
 ```json
 {
