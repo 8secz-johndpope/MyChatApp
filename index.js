@@ -7,8 +7,7 @@ const session = require('./app/session');
 const sharedsession = require('express-socket.io-session')(session);
 const fileupload = require('express-fileupload');
 
-const ConnectMongo = require('./app/connect-mongo');
-const database = new ConnectMongo();
+const database = require('./app/connect-mongo');
 const PORT = process.env.PORT || 80;
 
 const Logger = require('./app/logging');
