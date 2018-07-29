@@ -10,6 +10,8 @@ If you love it, [fork my repos](https://github.com/beohoang98/myChatApp/fork) an
 
 [![Build Status](https://travis-ci.org/beohoang98/MyChatApp.svg?branch=master)](https://travis-ci.org/beohoang98/MyChatApp)
 [![Coverage Status](https://coveralls.io/repos/github/beohoang98/MyChatApp/badge.svg)](https://coveralls.io/github/beohoang98/MyChatApp)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6f30574063e198f97821/maintainability)](https://codeclimate.com/github/beohoang98/MyChatApp/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6f30574063e198f97821/test_coverage)](https://codeclimate.com/github/beohoang98/MyChatApp/test_coverage)
 
 ---
 
@@ -68,7 +70,12 @@ git clone https://github.com/beohoang98/MyChatApp.git
 cd MyChatApp
 ```
 
-Config your server and database on file `config.json`
+Install package:
+```bash
+npm install
+```
+
+Then, config your server and database on file `config.json`
 
 ```json
 {
