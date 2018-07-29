@@ -50,7 +50,7 @@ I'm learning NodeJS in:
 
 Other document:
 - [Google Photos API](https://developers.google.com/photos/library/reference/rest/v1/mediaItems/search)
-
+- [Custom serve staic files with express](https://github.com/expressjs/serve-static/blob/master/index.js)
 
 ---
 

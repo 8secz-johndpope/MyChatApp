@@ -8,6 +8,8 @@
         "new-cap": "off",
         "indent": "off",
         "no-trailing-spaces": "off",
-        "quotes": "off"
+        "quotes": "off",
+        
+        "no-unused-vars": "warn"
     }
 }
