@@ -1,10 +1,6 @@
 const app = require('express').Router()
-const path = require('path')
-const STORAGE_FOLDER = path.join(__dirname, '../storage_folder/')
 
-const storage = require('./store-image-local')(STORAGE_FOLDER)
-
-function init (database) {
+function init (database, storage) {
 	const myFunc = require('../myFunc')(database)
 
 	app.get('/', async (req, res) => {

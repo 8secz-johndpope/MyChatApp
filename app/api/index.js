@@ -1,8 +1,8 @@
 'use strict'
 
 const api = require('express').Router()
-const mime = require('mime-types')
-const path = require('path')
+// const mime = require('mime-types')
+// const path = require('path')
 
 /**
  * @param {Object} Store
@@ -93,7 +93,7 @@ function init (database, Store) {
 
 		const idImage = await Store.addImage(file.data)
 		if (!idImage) throw new Error('Cannot add image into storage id=' + idImage)
-		const imagePath = Store.getImagePath(idImage)
+		const imagePath = await Store.getImageUrl(idImage)
 
 		db.collection('User')
 		.update({name: username}, {

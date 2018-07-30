@@ -1,5 +1,6 @@
 const auth = require('./AuthorizeService')
 const fetch = require('node-fetch')
+const Logger = require('../logging')
 
 const DEFAULT_PHOTO_LIMITS = 5
 const DEFAULT_ALBUM_LIMITS = 10
@@ -209,9 +210,7 @@ ConnectGooglePhotos.prototype.getAlbumByNameOrCreate = async function (name) {
  */
 ConnectGooglePhotos.prototype.getImage = async function (mediaId) {
 	const res = await fetch(`https://photoslibrary.googleapis.com/v1/mediaItems/${mediaId}`)
-
 	const json = await res.json()
-
 	return json
 }
 
@@ -245,6 +244,49 @@ ConnectGooglePhotos.prototype.listInAlbum = async function (albumID, callback) {
 
 	if (!listRes.mediaItems) return []
 	return listRes.mediaItems
+}
+
+/**
+ * @returns {Promise<String>} url public in web
+ */
+ConnectGooglePhotos.prototype.getPublic = async function (mediaId) {
+	const Endpoint = "https://photoslibrary.googleapis.com/v1/mediaItems/" + mediaId
+	const Header = {
+		"Content-type": "application/json",
+		"Authorization": "Bearer " + this.access_token
+	}
+
+	const resForBaseUrl = await fetch(Endpoint, {headers: Header})
+	const jsonRes = await resForBaseUrl.json()
+	const baseUrl = jsonRes.baseUrl
+
+	return baseUrl
+}
+
+/**
+ * @returns {Promise<Buffer>} data of private image
+ */
+ConnectGooglePhotos.prototype.getPrivate = async function (mediaId) {
+	const baseUrl = await this.getPublic(mediaId)
+	if (!baseUrl) return ""
+
+	const binData = await (await fetch(baseUrl + '=w200-h200-c')).arrayBuffer()
+	return binData
+}
+
+/// ---Like Store Image---
+
+/**
+ * add image
+ * @param {Buffer | String} data
+ * @returns {Promise<String>} id of mediaItems (image)
+ */
+ConnectGooglePhotos.prototype.addImage = async function (data, type, name) {
+	if (!name) name = 'No name'
+	const albumId = (type === 'private') ? this.albums.private.id : this.albums.public.id
+
+	const file = await this.upload(albumId, name, data)
+	return file.id
 }
 
 /**

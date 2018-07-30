@@ -1,6 +1,6 @@
 const login = require('express').Router()
 const bcrypt = require('bcrypt')
-const config = require('../../config.json')
+const config = require('../../config')
 
 module.exports = function (database = require('../connect-mongo')(), store) {
 	login.get('/signup', (req, res) => {

@@ -9,7 +9,7 @@
         "indent": "off",
         "no-trailing-spaces": "off",
         "quotes": "off",
-        
+        "no-undef":"warn",
         "no-unused-vars": "warn"
     }
 }

@@ -8,6 +8,7 @@ const fileupload = require('express-fileupload')
 const path = require('path')
 
 const database = require('./app/connect-mongo')
+const storage = require('./app/StoreImage')
 const PORT = process.env.PORT || 80
 
 const Logger = require('./app/logging')
@@ -25,7 +26,7 @@ app.use(session)
 app.use('/lib/socket.io', express.static(path.join(__dirname, '/node_modules/socket.io-client/dist')))
 
 // app router
-app.use(require('./app/index')(database))
+app.use(require('./app/index')(database, storage))
 
 // io
 const ioServer = require('./app/socket')(http, database)
@@ -56,8 +57,11 @@ database.ready(async (db) => {
 		})
 	}
 
+	await storage.init()
+
 	// listen
 	http.listen(PORT, () => {
+		Logger.info('NODE_ENV: ' + process.env.NODE_ENV)
 		console.log('Server listen on http://localhost:' + PORT + '/')
 		console.log('Start...')
 	})

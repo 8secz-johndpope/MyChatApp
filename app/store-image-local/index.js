@@ -1,7 +1,6 @@
 const sharp = require('sharp')
 const fs = require('fs')
 const path = require('path')
-const URL = require('url')
 
 const ID_LENGTH = 20 // 26^20 is big !
 
@@ -16,43 +15,6 @@ function StoreImage (folder) {
 
 	if (!fs.existsSync(this.folder)) {
 		fs.mkdirSync(this.folder)
-	}
-	console.log("Use directory " + this.folder + "for storage")
-
-	/**
-	 * require body-parser to use it
-	 * @param {*} req 
-	 * @param {*} res 
-	 * @param {*} next 
-	 */
-	this.static = function () {
-		return (req, res, next) => {
-			const url = URL.parse(req.url).pathname.replace(/(^\/)|(\/$)/g, '').split('/')
-
-			if (url.length !== 2) {
-				next()
-				return
-			}
-
-			const id = url[1].replace(' ', '')
-			const pathname = url[0]
-
-			if (pathname === "storage" && !!id) { // id is not '', null, false or undefined
-				if (req.method !== 'GET') {
-					res.status(404)
-					res.setHeader('Allow', 'GET')
-					res.end()
-					return
-				}
-
-				console.log(path.join(this.folder, '/' + id + '.data'))
-				res.sendFile(path.join(this.folder, '/' + id + '.data'))
-				
-				return
-			}
-
-			next()
-		}
 	}
 
 	/**
@@ -87,7 +49,7 @@ function StoreImage (folder) {
 	 */
 	this.addImage = async function (data) {
 		const id = await this._makeUniqeId()
-		const filepath = path.join(this.folder, id + ".data")
+		const filepath = path.join(this.folder, id + ".jpeg")
 
 		const compressedData = await this.add(data)
 
@@ -122,7 +84,7 @@ function StoreImage (folder) {
 		let id = this._makeRandomString(ID_LENGTH)
 
 		// check if id exists
-		while (fs.existsSync(path.join(this.folder, id + ''))) {
+		while (fs.existsSync(path.join(this.folder, id + '.jpeg'))) {
 			id = this._makeRandomString(ID_LENGTH)
 		}
 

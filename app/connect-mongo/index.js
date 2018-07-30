@@ -1,4 +1,4 @@
-const config = require('../../config.json')
+const config = require('../../config')
 const URL = require('url')
 let DB_URL
 let DB_NAME
