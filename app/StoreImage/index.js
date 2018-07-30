@@ -7,6 +7,8 @@ const config = require('../../config')
 const path = require('path')
 const Logger = require('../logging')
 const URL = require('url')
+const fs = require('fs')
+const NO_IMAGE_PATH = path.join(__dirname, '../../public/images/no-image.png')
 
 const StoreLocal = require('../store-image-local')(config.LocalStorage)
 const GooglePhotos = require("../connect-google-photos")
@@ -80,12 +82,21 @@ StoreImage.prototype.static = function () {
 
 			if (this.type === 'google') {
 				const data = await this.storage.getPrivate(id)
-				res.setHeader('Content-Type', 'image/jpeg')
-				res.send(Buffer.from(data))
-				res.end()
+				if (!data) {
+					res.sendFile(NO_IMAGE_PATH)
+				} else {
+					res.setHeader('Content-Type', 'image/jpeg')
+					res.send(Buffer.from(data))
+					res.end()
+				}
 			} else {
 				const filepath = path.join(this.storage.folder, '/' + id + '.jpeg')
-				res.sendFile(filepath)
+
+				if (!fs.existsSync(filepath)) {
+					res.sendFile(NO_IMAGE_PATH)
+				} else {
+					res.sendFile(filepath)
+				}
 			}
 			
 			return

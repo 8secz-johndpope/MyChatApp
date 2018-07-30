@@ -11,7 +11,8 @@
 		<div class="profile-bg d-flex justify-content-center align-items-center position-relative" style="background-image: url('<%= user.cover_image -%>')">
 			<h1 class="text-center serif-font text-light"><%= user.name %></h1>
 			<div class="profile-avatar user-pic">
-				<img src="<%=user.picture%>" alt="">
+				<img src="<%=user.picture%>" alt="" id='profile-avatar' onload="$('#avatar-loading').hide()">
+				<img src="/images/loading.gif" alt="" id="avatar-loading">
 			</div>
 		</div>
 	</div>
@@ -22,6 +23,23 @@
 			<% } %>
 		</div>
 	</main>
+
+	<!-- modal for err -->
+	<div class="modal fade" id="error-modal">
+		<div class="modal-dialog modal-dialog-centered">
+			<pre class="modal-content">
+				<div class="modal-header">
+					<div class="modal-title">Error</div>
+				</div>
+				<pre class="modal-body">
+				</pre>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" data-dismiss='modal'>Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<% if (me.name == user.name) { %>
 	<script src="/js/profile-owner.js"></script>
 	<% } %>

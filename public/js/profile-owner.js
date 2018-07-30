@@ -20,39 +20,48 @@
 			file = this.files[0]
 
 			const url = URL.createObjectURL(file)
-			avatar.find('img').attr('src', url)
+			$('#profile-avatar').attr('src', url)
 
 			avatar.addClass('is-on-update')
 		})
 
 		$('#update-avatar').click(function () {
+			$('#avatar-loading').show()
+
 			const fd = new FormData()
 			fd.append('avatar', file, 'avatar.jpg')
 
 			console.log(fd)
 
 			$.ajax({
-				url: '/api/user/avatar',
+				// url: '/api/user/avatar',
 				method: "POST",
+				headers: {
+					'Accept': 'application/json'
+				},
 				xhrFields: {
 					withCredentials: true
 				},
 				processData: false,
 				contentType: false,
 				data: fd,
-				dataType: 'json',
 				success: (json) => {
 					if (json.err) {
-						window.alert(json.msg)
-						// window.location.reload()
+						$('#error-modal')
+						.find('.modal-body')
+						.text(JSON.stringify(json.err, null, 4))
+						$('#error-modal').modal('show')
 					}
 					const newUrl = json.new_picture_url
-					avatar.find('img').attr('src', newUrl)
+					$('#profile-avatar').attr('src', newUrl)
+					$('#avatar-loading').hide()
 					window.location.reload()
 				},
 				error: (err) => {
-					window.alert(err + "")
-					// window.location.reload()
+					$('#error-modal')
+					.find('.modal-body')
+					.text(JSON.stringify(err, null, 4))
+					$('#error-modal').modal('show')
 				}
 			})
 		})
