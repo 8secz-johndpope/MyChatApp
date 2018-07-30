@@ -6,3 +6,4 @@ logs/
 coverage/
 .nyc_output/
 *.hide.*
+store_folder

@@ -12,6 +12,7 @@ If you love it, [fork my repos](https://github.com/beohoang98/myChatApp/fork) an
 [![Coverage Status](https://coveralls.io/repos/github/beohoang98/MyChatApp/badge.svg)](https://coveralls.io/github/beohoang98/MyChatApp)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6f30574063e198f97821/maintainability)](https://codeclimate.com/github/beohoang98/MyChatApp/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6f30574063e198f97821/test_coverage)](https://codeclimate.com/github/beohoang98/MyChatApp/test_coverage)
+[![BCH compliance](https://bettercodehub.com/edge/badge/beohoang98/MyChatApp?branch=master)](https://bettercodehub.com/)
 
 ---
 
@@ -51,6 +52,7 @@ I'm learning NodeJS in:
 Other document:
 - [Google Photos API](https://developers.google.com/photos/library/reference/rest/v1/mediaItems/search)
 - [Custom serve staic files with express](https://github.com/expressjs/serve-static/blob/master/index.js)
+- [how-to-convert-image-into-base64-string-using-javascript](https://stackoverflow.com/questions/6150289/how-to-convert-image-into-base64-string-using-javascript)
 
 ---
 

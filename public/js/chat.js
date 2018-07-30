@@ -145,7 +145,9 @@
 				}
 
 				const thisPosID = posID;
-				arrImgToSend[thisPosID] = data;
+				arrImgToSend[thisPosID] = {
+					base64Data: await getImageBase64(url)
+				}
 				$('#img-preview-'+thisPosID).click(function (){
 					$(this).remove();
 					totalSize -= size;
@@ -218,8 +220,8 @@ function displayMessage(myName, msgInfo, type)
 	`);
 
 	const imgDiv = $('<div/>').addClass('chat-mes-imgs');
-	for (const img_url of imgs) {
-		$('<img/>').attr('src', img_url).appendTo(imgDiv);
+	for (const img_id of imgs) {
+		$('<img/>').attr('src', '/storage/'+img_id).appendTo(imgDiv);
 	}
 	div.append(imgDiv);
 
@@ -248,7 +250,9 @@ async function getImageBase64(src)
 			canvas.height = img[0].height;
 			const ctx = canvas.getContext('2d');
 			ctx.drawImage(img[0], 0, 0);
-			res(canvas.toDataURL('image/jpeg'));
+			const base64data = canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,', '')
+					
+			res(base64data);
 		});
 	})
 }

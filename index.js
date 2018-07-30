@@ -28,12 +28,10 @@ app.use('/lib/socket.io', express.static(path.join(__dirname, '/node_modules/soc
 // app router
 app.use(require('./app/index')(database, storage))
 
-// io
-const ioServer = require('./app/socket')(http, database)
-// share session with socket-io
-ioServer.use(sharedsession)
-
 database.ready(async (db) => {
+	// init storage
+	await storage.init()
+
 	const matchUserCol = await db.listCollections({name: 'User'}).toArray()
 	const matchChatCol = await db.listCollections({name: 'Chat'}).toArray()
 	
@@ -57,7 +55,9 @@ database.ready(async (db) => {
 		})
 	}
 
-	await storage.init()
+	// io
+	const ioServer = require('./app/socket')(http, database, storage)
+	ioServer.use(sharedsession)
 
 	// listen
 	http.listen(PORT, () => {

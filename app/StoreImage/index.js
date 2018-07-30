@@ -1,3 +1,8 @@
+/**
+ * Store Image module
+ * @module StoreImage
+ */
+
 const config = require('../../config')
 const path = require('path')
 const Logger = require('../logging')
@@ -79,7 +84,8 @@ StoreImage.prototype.static = function () {
 				res.send(Buffer.from(data))
 				res.end()
 			} else {
-				res.sendFile(path.join(this.folder, '/' + id + '.jpeg'))
+				const filepath = path.join(this.storage.folder, '/' + id + '.jpeg')
+				res.sendFile(filepath)
 			}
 			
 			return
@@ -91,4 +97,7 @@ StoreImage.prototype.static = function () {
 	return router
 }
 
+/**
+ * @exports StoreImage
+ */
 module.exports = new StoreImage()
