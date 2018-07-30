@@ -5,3 +5,4 @@ public/avatar/*
 logs/
 coverage/
 .nyc_output/
+*.hide.*

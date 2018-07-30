@@ -1,0 +1,15 @@
+{
+    "extends": "standard",
+    "parserOptions": {
+        "ecmaVersion": 8
+    },
+    "rules": {
+        "no-tabs": "off",
+        "new-cap": "off",
+        "indent": "off",
+        "no-trailing-spaces": "off",
+        "quotes": "off",
+        "no-undef":"warn",
+        "no-unused-vars": "warn"
+    }
+}

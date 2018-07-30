@@ -6,5 +6,7 @@
 			"extension": ".min.css"
 		}
 	],
-	"easysass.targetDir": "public/css"
+	"easysass.targetDir": "public/css",
+
+	"eslint.run": "onType"
 }

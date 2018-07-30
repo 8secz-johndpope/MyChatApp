@@ -42,8 +42,15 @@ I'm study and learn best practices from
 - [Chat.io](https://github.com/OmarElGabry/chat.io)
 - [RaspChat](https://github.com/maxpert/raspchat)
 
+I'm learning NodeJS in:
+
 - Learning basic node [https://www.tutorialspoint.com/nodejs/nodejs_quick_guide.htm](https://www.tutorialspoint.com/nodejs/nodejs_quick_guide.htm)
 - Another page to learn [http://online.khoapham.vn/7-nodejs](http://online.khoapham.vn/7-nodejs)
+- [Stackoverflow](https://stackoverflow.com)
+
+Other document:
+- [Google Photos API](https://developers.google.com/photos/library/reference/rest/v1/mediaItems/search)
+- [Custom serve staic files with express](https://github.com/expressjs/serve-static/blob/master/index.js)
 
 ---
 
