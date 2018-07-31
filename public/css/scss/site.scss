@@ -25,7 +25,7 @@ body {
 		position: -webkit-sticky;
 		position: sticky;
 		top: 0;
-		z-index: 9999;
+		z-index: 1049; // bootstrap modal is 1050
 
 		a {
 			color: #fff;
@@ -70,12 +70,12 @@ body {
 	}
 }
 
-::-webkit-scrollbar, ::-moz-scrollbar {
-	width: 5px;
-	height: 5px;
+// ::-webkit-scrollbar, ::-moz-scrollbar {
+// 	width: 5px;
+// 	height: 5px;
 
-	&-thumb {
-		background-color: rgba(#333, 0.5);
-		border-radius: 10px;
-	}
-}
+// 	&-thumb {
+// 		background-color: rgba(#333, 0.5);
+// 		border-radius: 10px;
+// 	}
+// }

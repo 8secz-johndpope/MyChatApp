@@ -20,20 +20,23 @@
 			file = this.files[0]
 
 			const url = URL.createObjectURL(file)
-			avatar.find('img').attr('src', url)
+			$('#profile-avatar').attr('src', url)
 
 			avatar.addClass('is-on-update')
 		})
 
 		$('#update-avatar').click(function () {
+			$('#avatar-loading').show()
+
 			const fd = new FormData()
 			fd.append('avatar', file, 'avatar.jpg')
-
-			console.log(fd)
 
 			$.ajax({
 				url: '/api/user/avatar',
 				method: "POST",
+				headers: {
+					'Accept': 'application/json'
+				},
 				xhrFields: {
 					withCredentials: true
 				},
@@ -43,16 +46,66 @@
 				dataType: 'json',
 				success: (json) => {
 					if (json.err) {
-						window.alert(json.msg)
-						// window.location.reload()
+						$('#error-modal')
+						.find('.modal-body')
+						.text(JSON.stringify(json.err, null, 4))
+						$('#error-modal').modal('show')
 					}
-					const newUrl = json.new_picture_url
-					avatar.find('img').attr('src', newUrl)
+					console.log(json)
+					const newUrl = json.data.new_picture_url
+					$('#profile-avatar').attr('src', newUrl)
+					$('#avatar-loading').hide()
 					window.location.reload()
 				},
 				error: (err) => {
-					window.alert(err + "")
-					// window.location.reload()
+					$('#error-modal')
+					.find('.modal-body')
+					.text(JSON.stringify(err, null, 4))
+					$('#error-modal').modal('show')
+				}
+			})
+		})
+
+		$('#cover-input').on('input', function () {
+			const file = this.files[0]
+
+			const fd = new FormData()
+			fd.append('cover', file)
+
+			const newFileUrl = URL.createObjectURL(file)
+			$('#profile-cover').css('background-image', `url(${newFileUrl})`)
+
+			$('#change-cover-ok, #change-cover-no').removeClass('d-none')
+			$('#profile-cover').addClass('is-change')
+
+			$('#change-cover-no').click(() => {
+				$('#change-cover-ok, #change-cover-no').addClass('d-none')
+				$('#profile-cover').removeClass('is-change')
+				$('#profile-cover').css('background-image', "url(" + $('#profile-cover').data('cover') + ")")
+			})
+
+			$('#change-cover-ok').click(async () => {
+				const res = await fetch('/api/user/cover-photo', {
+					headers: {
+						Accept: 'application/json'
+					},
+					credentials: 'include',
+					method: 'POST',
+					body: fd
+				})
+
+				const json = await res.json()
+
+				if (json.err) {
+					$('#error-modal')
+					.find('.modal-body')
+					.text(JSON.stringify(json.msg, null, 4))
+					$('#error-modal').modal('show')
+					$('#change-cover-ok, #change-cover-no').addClass('d-none')
+					$('#profile-cover').removeClass('is-change')
+					$('#profile-cover').css('background-image', "url(" + $('#profile-cover').data('cover') + ")")
+				} else {
+					window.location.reload()	
 				}
 			})
 		})

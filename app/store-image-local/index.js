@@ -47,11 +47,11 @@ function StoreImage (folder) {
 	 * @param {String | Buffer} data data of file image
 	 * @returns id of image
 	 */
-	this.addImage = async function (data) {
+	this.addImage = async function (data, opts) {
 		const id = await this._makeUniqeId()
 		const filepath = path.join(this.folder, id + ".jpeg")
 
-		const compressedData = await this.add(data)
+		const compressedData = await this.add(data, opts)
 
 		fs.writeFileSync(filepath, compressedData)
 		return id

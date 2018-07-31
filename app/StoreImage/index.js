@@ -1,7 +1,14 @@
+/**
+ * Store Image module
+ * @module StoreImage
+ */
+
 const config = require('../../config')
 const path = require('path')
 const Logger = require('../logging')
 const URL = require('url')
+const fs = require('fs')
+const NO_IMAGE_PATH = path.join(__dirname, '../../public/images/no-image.png')
 
 const StoreLocal = require('../store-image-local')(config.LocalStorage)
 const GooglePhotos = require("../connect-google-photos")
@@ -29,8 +36,8 @@ StoreImage.prototype.init = async function () {
  * @param {Buffer | String} data
  * @returns id of image 
  */
-StoreImage.prototype.addImage = async function (data) {
-	const idImage = await this.storage.addImage(data)
+StoreImage.prototype.addImage = async function (data, opts) {
+	const idImage = await this.storage.addImage(data, opts)
 	return idImage
 }
 
@@ -75,11 +82,21 @@ StoreImage.prototype.static = function () {
 
 			if (this.type === 'google') {
 				const data = await this.storage.getPrivate(id)
-				res.setHeader('Content-Type', 'image/jpeg')
-				res.send(Buffer.from(data))
-				res.end()
+				if (!data) {
+					res.sendFile(NO_IMAGE_PATH)
+				} else {
+					res.setHeader('Content-Type', 'image/jpeg')
+					res.send(Buffer.from(data))
+					res.end()
+				}
 			} else {
-				res.sendFile(path.join(this.folder, '/' + id + '.jpeg'))
+				const filepath = path.join(this.storage.folder, '/' + id + '.jpeg')
+
+				if (!fs.existsSync(filepath)) {
+					res.sendFile(NO_IMAGE_PATH)
+				} else {
+					res.sendFile(filepath)
+				}
 			}
 			
 			return
@@ -91,4 +108,7 @@ StoreImage.prototype.static = function () {
 	return router
 }
 
+/**
+ * @exports StoreImage
+ */
 module.exports = new StoreImage()

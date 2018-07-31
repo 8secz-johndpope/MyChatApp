@@ -52,6 +52,11 @@
 			max-width: 40%;
 			object-fit: cover;
 			border-radius: 5px;
+			&:hover {
+				cursor: pointer;
+				-webkit-filter: brightness(70%);
+				filter: brightness(70%);
+			}
 		}
 	}
 }
