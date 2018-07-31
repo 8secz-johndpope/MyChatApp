@@ -279,10 +279,12 @@ ConnectGooglePhotos.prototype.getPrivate = async function (mediaId) {
 /**
  * add image
  * @param {Buffer | String} data
+ * @param {JSON} [opts] this is useless param because google photos has compress option
+ * @param {String} [type] `private` or `public`, default is `public` 
  * @returns {Promise<String>} id of mediaItems (image)
  */
-ConnectGooglePhotos.prototype.addImage = async function (data, type, name) {
-	if (!name) name = 'No name'
+ConnectGooglePhotos.prototype.addImage = async function (data, opts, type) {
+	const name = 'No name'
 	const albumId = (type === 'private') ? this.albums.private.id : this.albums.public.id
 
 	const file = await this.upload(albumId, name, data)

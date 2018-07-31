@@ -1,119 +1,56 @@
 'use strict'
 
 const api = require('express').Router()
-// const mime = require('mime-types')
-// const path = require('path')
+const returner = require('./ApiReturn')
 
 /**
  * @param {Object} Store
  * @param {Object} database require('connect-mongo')()
  */
 function init (database, Store) {
+	api.use(require('./UserCoverPhoto')(database, Store))
+	api.use(require('./UserAvatar')(database, Store))
+	
 	api.get('/api/user/:username', async (req, res) => {
-		const username = req.params.username
 		try {
+			const username = req.params.username
 			const db = await database.ready()
-			const arrMatch = await db.collection('User').find({
-				name: username
-			}).toArray()
+			const arrMatch = await db.collection('User').find({name: username}).toArray()
 
 			if (arrMatch.length === 0) {
 				throw new Error('Khong tim thay ' + username)
 			}
 
-			res.end(JSON.stringify({
-				err: false,
-				data: {
-					username: arrMatch[0].name,
-					picture: arrMatch[0].picture,
-					cover_image: arrMatch[0].cover_image
-				}
+			res.end(returner.success({
+				username: arrMatch[0].name,
+				picture: arrMatch[0].picture,
+				cover_image: arrMatch[0].cover_image
 			}))
 		} catch (e) {
 			console.log(e + "")
-			res.end(JSON.stringify({
-				err: true,
-				msg: e
-			}))
+			res.end(returner.error(e))
 		}
 	})
 
 	api.get('/api/me', async (req, res) => {
-		const username = req.session.user
-
 		try {
+			const username = req.session.user
 			const db = await database.ready()
-			const arrMatch = await db.collection('User').find({
-				name: username
-			}).toArray()
+			const arrMatch = await db.collection('User').find({name: username}).toArray()
 
 			if (arrMatch.length === 0) {
 				throw new Error('Khong tim thay ' + username + ' in ' + req.url)
 			}
 
-			res.end(JSON.stringify({
-				err: false,
-				data: {
-					username: arrMatch[0].name,
-					picture: arrMatch[0].picture,
-					cover_image: arrMatch[0].cover_image
-				}
+			res.end(returner.success({
+				username: arrMatch[0].name,
+				picture: arrMatch[0].picture,
+				cover_image: arrMatch[0].cover_image
 			}))
 		} catch (e) {
 			console.log(e + "")
-			res.end(JSON.stringify({
-				err: true,
-				msg: e
-			}))
+			res.end(returner.error(e))
 		}
-	})
-
-	api.post('/api/user/avatar', async (req, res) => {
-		if (!req.session || !req.session.user) {
-			res.send(JSON.stringify({
-				err: true,
-				msg: 'missing credentials'
-			}))
-			return
-		}
-		const username = req.session.user
-
-		if (!req.files || !req.files.avatar) {
-			res.send(JSON.stringify({
-				err: true,
-				msg: 'missing file'
-			}))
-			return
-		}
-
-		const file = req.files.avatar
-		// const newName = username + '.jpeg' // always jpeg because StoreImage will processing to jpeg
-
-		const db = await database.ready()
-
-		const idImage = await Store.addImage(file.data)
-		if (!idImage) throw new Error('Cannot add image into storage id=' + idImage)
-		const imagePath = await Store.getImageUrl(idImage)
-
-		db.collection('User')
-		.update({name: username}, {
-			$set: {
-				picture: imagePath
-			}
-		}, (err) => {
-			if (err) {
-				res.send(JSON.stringify({
-					err: true,
-					msg: 'cannot update on user infomation'
-				}))
-				return
-			}
-
-			res.send(JSON.stringify({
-				err: false,
-				new_picture_url: imagePath
-			}))
-		})
 	})
 
 	return api

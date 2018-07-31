@@ -8,7 +8,14 @@
 <body>
 	<%- include('includes/header', {user: me}) %>
 	<div class="container-fluid profile-header p-0">
-		<div class="profile-bg d-flex justify-content-center align-items-center position-relative" style="background-image: url('<%= user.cover_image -%>')">
+		<div data-cover='<%= user.cover_image -%>' id='profile-cover' class="profile-bg d-flex justify-content-center align-items-center position-relative" style="background-image: url('<%= user.cover_image -%>')">
+			<div class="profile-change-cover">
+				<button id='change-cover-ok' class='btn btn-primary d-none' for="cover-input">OK</button>
+				<button id='change-cover-no' class='btn btn-danger d-none' for="cover-input"><i class="fa fa-times"></i></button>
+				<label class='btn btn-outline-light' for="cover-input">Change</label>
+				<input type="file" name="cover_image" id="cover-input">
+			</div>
+			
 			<h1 class="text-center serif-font text-light"><%= user.name %></h1>
 			<div class="profile-avatar user-pic">
 				<img src="<%=user.picture%>" alt="" id='profile-avatar' onload="$('#avatar-loading').hide()">

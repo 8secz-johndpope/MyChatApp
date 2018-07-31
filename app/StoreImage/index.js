@@ -36,8 +36,8 @@ StoreImage.prototype.init = async function () {
  * @param {Buffer | String} data
  * @returns id of image 
  */
-StoreImage.prototype.addImage = async function (data) {
-	const idImage = await this.storage.addImage(data)
+StoreImage.prototype.addImage = async function (data, opts) {
+	const idImage = await this.storage.addImage(data, opts)
 	return idImage
 }
 

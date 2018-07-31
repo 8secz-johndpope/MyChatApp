@@ -31,10 +31,8 @@
 			const fd = new FormData()
 			fd.append('avatar', file, 'avatar.jpg')
 
-			console.log(fd)
-
 			$.ajax({
-				// url: '/api/user/avatar',
+				url: '/api/user/avatar',
 				method: "POST",
 				headers: {
 					'Accept': 'application/json'
@@ -45,6 +43,7 @@
 				processData: false,
 				contentType: false,
 				data: fd,
+				dataType: 'json',
 				success: (json) => {
 					if (json.err) {
 						$('#error-modal')
@@ -52,7 +51,8 @@
 						.text(JSON.stringify(json.err, null, 4))
 						$('#error-modal').modal('show')
 					}
-					const newUrl = json.new_picture_url
+					console.log(json)
+					const newUrl = json.data.new_picture_url
 					$('#profile-avatar').attr('src', newUrl)
 					$('#avatar-loading').hide()
 					window.location.reload()
@@ -62,6 +62,50 @@
 					.find('.modal-body')
 					.text(JSON.stringify(err, null, 4))
 					$('#error-modal').modal('show')
+				}
+			})
+		})
+
+		$('#cover-input').on('input', function () {
+			const file = this.files[0]
+
+			const fd = new FormData()
+			fd.append('cover', file)
+
+			const newFileUrl = URL.createObjectURL(file)
+			$('#profile-cover').css('background-image', `url(${newFileUrl})`)
+
+			$('#change-cover-ok, #change-cover-no').removeClass('d-none')
+			$('#profile-cover').addClass('is-change')
+
+			$('#change-cover-no').click(() => {
+				$('#change-cover-ok, #change-cover-no').addClass('d-none')
+				$('#profile-cover').removeClass('is-change')
+				$('#profile-cover').css('background-image', "url(" + $('#profile-cover').data('cover') + ")")
+			})
+
+			$('#change-cover-ok').click(async () => {
+				const res = await fetch('/api/user/cover-photo', {
+					headers: {
+						Accept: 'application/json'
+					},
+					credentials: 'include',
+					method: 'POST',
+					body: fd
+				})
+
+				const json = await res.json()
+
+				if (json.err) {
+					$('#error-modal')
+					.find('.modal-body')
+					.text(JSON.stringify(json.msg, null, 4))
+					$('#error-modal').modal('show')
+					$('#change-cover-ok, #change-cover-no').addClass('d-none')
+					$('#profile-cover').removeClass('is-change')
+					$('#profile-cover').css('background-image', "url(" + $('#profile-cover').data('cover') + ")")
+				} else {
+					window.location.reload()	
 				}
 			})
 		})
