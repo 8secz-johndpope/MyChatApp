@@ -180,44 +180,6 @@ async function getMyInfo () {
 	return json
 }
 
-function displayMessage (myName, msgInfo, type) {
-	const user = msgInfo.username
-	const msg = msgInfo.msg
-	const imgs = msgInfo.imgs
-	const isMe = (myName === user) ? 'me' : ''
-	const chatDiv = $('#chat-content')
-
-	const div = $('<div/>').addClass('chat-mes ' + isMe).html(`
-		<div class='chat-mes-wrap'><div class='chat-mes-user'>${user}</div></div>
-		<div class='chat-mes-wrap'><pre class='chat-mes-mes'>${msg}</pre></div>
-	`)
-
-	const imgDiv = $('<div/>').addClass('chat-mes-imgs')
-	for (const imgId of imgs) {
-		$('<img/>')
-		.attr('src', '/storage/' + imgId)
-		.on('click', () => {
-			$('#image-modal img').attr('src', '/storage/' + imgId)
-			$('#image-modal').modal('show')
-		})
-		.appendTo(imgDiv)
-	}
-	div.append(imgDiv)
-
-	if (type === 1) { // newer
-		chatDiv.append(div)
-		scrollNewMessage()
-	} else { // older
-		chatDiv.prepend(div)
-	}
-}
-
-function scrollNewMessage () {
-	$('#chat-content').stop().animate({
-		scrollTop: $('#chat-content')[0].scrollHeight
-	}, 500)
-}
-
 function getImageBase64 (src) {
 	const resFunc = new Promise((resolve, reject) => {
 		const img = $('<img/>').attr('src', src).on('load', () => {
@@ -226,7 +188,7 @@ function getImageBase64 (src) {
 			canvas.height = img[0].height
 			const ctx = canvas.getContext('2d')
 			ctx.drawImage(img[0], 0, 0)
-			const base64data = canvas.toDataURL('image/jpeg').replace('data:image/jpegbase64,', '')
+			const base64data = canvas.toDataURL('image/jpeg').replace('data:image/jpeg;base64,', '')
 					
 			resolve(base64data)
 		})

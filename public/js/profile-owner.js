@@ -1,6 +1,8 @@
 (function ($) {
 	$(document).ready(async () => {
 		createUpdateAvatar()
+
+		$('#profile-cover').find('.profile-change-cover').show()
 	})
 
 	function createUpdateAvatar () {
@@ -105,7 +107,7 @@
 					$('#profile-cover').removeClass('is-change')
 					$('#profile-cover').css('background-image', "url(" + $('#profile-cover').data('cover') + ")")
 				} else {
-					window.location.reload()	
+					window.location.reload()
 				}
 			})
 		})

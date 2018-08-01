@@ -3,17 +3,17 @@
  * @module StoreImage
  */
 
+const express = require('express')
 const config = require('../../config')
 const path = require('path')
 const Logger = require('../logging')
-const URL = require('url')
 const fs = require('fs')
 const NO_IMAGE_PATH = path.join(__dirname, '../../public/images/no-image.png')
 
 const StoreLocal = require('../store-image-local')(config.LocalStorage)
 const GooglePhotos = require("../connect-google-photos")
 
-const StoreImage = function () {
+function StoreImage () {
 	if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test_web') {
 		this.type = 'google'
 		this.storage = GooglePhotos
@@ -28,7 +28,7 @@ const StoreImage = function () {
 StoreImage.prototype.init = async function () {
 	if (this.type === 'google') {
 		await this.storage.init()
-	}
+	} // else, local storage doesn't need init
 }
 
 /**
@@ -50,61 +50,37 @@ StoreImage.prototype.getImageUrl = async function (idImage, imageType) {
 		const url = await this.storage.getPublic(idImage)
 		return url
 	}
-
 	return '/storage/' + idImage
 }
 
 /**
  * use for express server
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
  */
 StoreImage.prototype.static = function () {
-	const router = async (req, res, next) => {
-		const url = URL.parse(req.url).pathname.replace(/(^\/)|(\/$)/g, '').split('/')
-
-		if (url.length !== 2) {
-			next()
+	const router = express.Router()
+	router.get('/storage/:idImage', async (req, res) => {
+		if (!req.session || !req.session.user) {
+			res.status(401).send('Missing credentials')
 			return
 		}
-
-		const id = url[1].replace(' ', '')
-		const pathname = url[0]
-
-		if (pathname === "storage" && !!id) { // id is not '', null, false or undefined
-			if (req.method !== 'GET') {
-				res.status(404)
-				res.setHeader('Allow', 'GET')
-				res.end()
-				return
-			}
-
-			if (this.type === 'google') {
-				const data = await this.storage.getPrivate(id)
-				if (!data) {
-					res.sendFile(NO_IMAGE_PATH)
-				} else {
-					res.setHeader('Content-Type', 'image/jpeg')
-					res.send(Buffer.from(data))
-					res.end()
-				}
+		const idImage = req.params.idImage
+		const width = req.query.width ? req.query.width : 768
+		const height = req.query.height ? req.query.height : 768
+	
+		if (this.type === 'google') {
+			const data = await this.storage.getPrivate(idImage, width, height)
+			if (!data) {
+				res.sendFile(NO_IMAGE_PATH)
 			} else {
-				const filepath = path.join(this.storage.folder, '/' + id + '.jpeg')
-
-				if (!fs.existsSync(filepath)) {
-					res.sendFile(NO_IMAGE_PATH)
-				} else {
-					res.sendFile(filepath)
-				}
+				res.setHeader('Content-Type', 'image/jpeg')
+				res.end(Buffer.from(data))
 			}
-			
-			return
+		} else {
+			const filepath = path.join(this.storage.folder, "/" + idImage + ".jpeg")
+			if (!fs.existsSync(filepath)) res.sendFile(NO_IMAGE_PATH)
+			else res.sendFile(filepath)
 		}
-
-		next()
-	}
-
+	})
 	return router
 }
 

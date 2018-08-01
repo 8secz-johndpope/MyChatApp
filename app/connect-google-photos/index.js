@@ -247,9 +247,12 @@ ConnectGooglePhotos.prototype.listInAlbum = async function (albumID, callback) {
 }
 
 /**
- * @returns {Promise<String>} url public in web
+ * @param {String} mediaId
+ * @param {Number} [width] default: 1024
+ * @param {Number} [height] default: 768
+ * @returns {Prom ise<String>} url public in web
  */
-ConnectGooglePhotos.prototype.getPublic = async function (mediaId) {
+ConnectGooglePhotos.prototype.getPublic = async function (mediaId, width = 1024, height = 768) {
 	const Endpoint = "https://photoslibrary.googleapis.com/v1/mediaItems/" + mediaId
 	const Header = {
 		"Content-type": "application/json",
@@ -259,18 +262,22 @@ ConnectGooglePhotos.prototype.getPublic = async function (mediaId) {
 	const resForBaseUrl = await fetch(Endpoint, {headers: Header})
 	const jsonRes = await resForBaseUrl.json()
 	const baseUrl = jsonRes.baseUrl
+	if (!baseUrl) return ''
 
-	return baseUrl
+	if (typeof width !== 'number') width = 1024
+	if (typeof height !== 'number') height = 768
+
+	return baseUrl + `=w${width}-h${height}`
 }
 
 /**
  * @returns {Promise<Buffer>} data of private image
  */
-ConnectGooglePhotos.prototype.getPrivate = async function (mediaId) {
-	const baseUrl = await this.getPublic(mediaId)
+ConnectGooglePhotos.prototype.getPrivate = async function (mediaId, width = 1024, height = 768) {
+	const baseUrl = await this.getPublic(mediaId, width, height)
 	if (!baseUrl) return ""
 
-	const binData = await (await fetch(baseUrl + '=w200-h200-c')).arrayBuffer()
+	const binData = await (await fetch(baseUrl)).arrayBuffer()
 	return binData
 }
 
