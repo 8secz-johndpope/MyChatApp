@@ -15,7 +15,7 @@ function init (database, storage) {
 	
 	// middleware
 	app.use(storage.static())
-	app.use(require('./login')(database))
+	app.use(require('./login')(database, storage))
 	app.use(require('./chat')(database))
 	app.use(require('./api')(database, storage))
 	app.use(require('./profile')(database))	
