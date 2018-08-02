@@ -6,11 +6,11 @@ const returner = require('./ApiReturn')
 module.exports = function (database, Store) {
 	router.post('/api/user/avatar', async (req, res) => {
 		if (!req.session || !req.session.user) {
-			res.send(returner.error('Missing Credentials'))
+			res.end(returner.error('Missing Credentials'))
 			return
 		}
 		if (!req.files || !req.files.avatar) {
-			res.send(returner.error('Missing File'))
+			res.end(returner.error('Missing File'))
 			return
 		}
 
@@ -24,11 +24,25 @@ module.exports = function (database, Store) {
 		db.collection('User')
 		.update({name: username}, {$set: {picture: imagePath}}, (err) => {
 			if (err) {
-				res.send(returner.error('Cannot add to database: ' + err))
+				res.end(returner.error('Cannot add to database: ' + err))
 				return
 			}
-			res.send(returner.success({new_picture_url: imagePath}))
+			res.end(returner.success({new_picture_url: imagePath}))
 		})
+	})
+
+	router.get('/:username/avatar', async (req, res) => {
+		const username = req.params.username
+
+		const db = await database.ready()
+		const findArr = await db.collection('User').find({name: username}).toArray()
+		if (findArr.length === 0) {
+			res.status(404).send('Not Found')
+			return
+		}
+
+		const picturePath = findArr[0].picture
+		res.redirect(picturePath)
 	})
 
 	return router

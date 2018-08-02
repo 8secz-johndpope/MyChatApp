@@ -3,6 +3,19 @@
 		<i class="fa fa-comments"></i>
 		My CHAT APP
 	</a>
+	<div class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" data-target="site-notify-dropdown" aria-haspopup="true" aria-expanded="false">
+			<i class="fas fa-globe-asia site-notify" id='site-notify'>
+				<div class="site-notify-icon"></div>
+			</i>
+		</a>
+		<div class="dropdown-menu bg-dark" id='site-notify-dropdown' aria-labelledby="notify-list">
+			<small class="text-light">No notify</small>
+			<div id="notify-list"></div>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item text-primary" href="/notify">See All</a>
+		</div>
+	</div>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarNav"
 	    aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -16,18 +29,7 @@
 						Feed
 					</a>
 				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" data-target="notify-list" aria-haspopup="true" aria-expanded="false">
-						<i class="fas fa-globe-asia site-notify" id='site-notify'>
-							<div class="site-notify-icon"></div>
-						</i>
-					</a>
-					<div class="dropdown-menu bg-dark" id='notify-list' aria-labelledby="notify-list">
-						<small class="text-light">No notify</small>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item text-primary" href="/notify">See All</a>
-					</div>
-				</li>
+				
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
 					    aria-expanded="false">

@@ -1,16 +1,18 @@
-function Access (io, main) {
-	this.io = io
-	this.main = main
+function Access (main) {
+	this.io = main.io
+	this.database = main.database
+	this.storage = main.storage
+	this.userArr = main.userArr
+	this.userActive = main.userActive
 
-	io.on('connect', (sock) => {
+	this.io.on('connect', (sock) => {
 		const username = sock.handshake.session.user
-
-		this.main.userActive[username] = sock
+		this.userActive[username] = sock
 		this.UpdateUserList()
-
+		
 		sock.on('disconnect', (why) => {
 			this.UpdateUserList()
-			delete this.main.userActive[username]
+			delete this.userActive[username]
 		})
 	})
 }
@@ -20,7 +22,7 @@ function Access (io, main) {
  * @returns `void` - but `userActive` and `userArr` will be change
  */
 Access.prototype.UpdateUserList = async function () {
-	const db = await this.main.database.ready()
+	const db = await this.database.ready()
 		
 	db.collection('User')
 	.find({}, {fields: {_id: 0}})
@@ -30,21 +32,23 @@ Access.prototype.UpdateUserList = async function () {
 			return
 		}
 
-		this.main.userArr = arr
-		for (let i = 0, len = this.main.userArr.length; i < len; ++i) {
-			const user = this.main.userArr[i]
-			if (!this.main.userActive[user.name]) {
-				this.main.userArr[i]['status'] = 'offline'
+		this.userArr = arr
+		for (let i = 0, len = this.userArr.length; i < len; ++i) {
+			const user = this.userArr[i]
+			if (!this.userActive[user.name]) {
+				this.userArr[i]['status'] = 'offline'
 			} else {
-				this.main.userArr[i]['status'] = 'active'
+				this.userArr[i]['status'] = 'active'
 			}
 		}
 
 		this.io.emit('update user list', {
 			err: false,
-			arr: this.main.userArr
+			arr: this.userArr
 		})
 	})
 }
 
-module.exports = Access
+module.exports = function (main) {
+	return new Access(main)
+}

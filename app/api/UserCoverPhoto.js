@@ -6,11 +6,11 @@ const returner = require('./ApiReturn')
 module.exports = function (database, Store) {
 	router.post('/api/user/cover-photo', async (req, res) => {
 		if (!req.session || !req.session.user) {
-			res.send(returner.error("Missing Credentials"))
+			res.end(returner.error("Missing Credentials"))
 			return
 		}
 		if (!req.files || !req.files.cover) {
-			res.send(returner.error("Missing File"))
+			res.end(returner.error("Missing File"))
 			return
 		}
 
@@ -24,10 +24,10 @@ module.exports = function (database, Store) {
 		db.collection('User')
 		.update({name: username}, {$set: {cover_image: imagePath}}, (err) => {
 			if (err) {
-				res.send(returner.error('Cannot add to database: ' + err))
+				res.end(returner.error('Cannot add to database: ' + err))
 				return
 			}
-			res.send(returner.success({
+			res.end(returner.success({
 				new_cover_url: imagePath
 			}))
 		})

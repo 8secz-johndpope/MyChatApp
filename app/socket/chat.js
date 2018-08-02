@@ -2,11 +2,15 @@
  * 
  * @param {SocketIO} io 
  */
-function Chat (io, main) {
-	this.io = io
-	this.main = main
+function Chat (main) {
+	this.io = main.io
+	this.database = main.database
+	this.storage = main.storage
+	this.userArr = main.userArr
+	this.userActive = main.userActive
+	this.notify = require('../notification')(main.database)
 
-	io.on('connect', (sock) => {
+	this.io.on('connect', (sock) => {
 		this.sendMessageHandle(sock)
 		this.chatHistoryHandle(sock)
 	})
@@ -24,7 +28,9 @@ Chat.prototype.sendMessageHandle = function (sock) {
 		const msg = data.msg
 		const imgs = data.imgs ? data.imgs : null
 		const time = new Date().getTime()
-		const imgsAfterStore = imgs ? await this.uploadImgs(imgs) : []
+		let imgsAfterStore
+		if (imgs) imgsAfterStore = await this.uploadImgs(imgs)
+		else imgsAfterStore = []
 
 		const dataSend = {
 			username: username,
@@ -32,12 +38,21 @@ Chat.prototype.sendMessageHandle = function (sock) {
 			imgs: imgsAfterStore
 		}
 
-		if (this.main.userActive[othername]) {
-			this.main.userActive[othername].emit('receive chat', dataSend)
+		if (this.userActive[othername]) {
+			this.userActive[othername].emit('receive chat', dataSend)
 		}
 		if (othername !== username) sock.emit('receive chat', dataSend)
 
-		const db = await this.main.database.ready()
+		// add to notify
+		this.notify.add({
+			user: othername,
+			type: 'message',
+			content: {
+				user: username
+			}
+		})
+
+		const db = await this.database.ready()
 		db.collection('Chat').insertOne({
 			user_send: (username),
 			user_read: (othername),
@@ -55,7 +70,7 @@ Chat.prototype.chatHistoryHandle = function (sock) {
 		const offset = data.offset
 		const limit = data.limit
 		const type = (data.type === -1) ? -1 : 1 // -1: older,  1: newer
-		const db = await this.main.database.ready()
+		const db = await this.database.ready()
 		const dataSend = {
 			type: type,
 			arrMsg: []
@@ -84,13 +99,19 @@ Chat.prototype.chatHistoryHandle = function (sock) {
 Chat.prototype.uploadImgs = async function (imgs) {
 	const arrayId = []
 
-	for (const img of Array.from(imgs)) {
-		const binData = Buffer.from(img.base64Data, 'base64')
-		const id = await this.main.storage.addImage(binData)
-		arrayId.push(id)
+	try {
+		for (const img of Array.from(imgs)) {
+			const binData = Buffer.from(img.base64Data, 'base64')
+			const id = await this.storage.addImage(binData)
+			arrayId.push(id)
+		}
+	} catch (err) {
+		console.log("Error: " + JSON.stringify(err, null, 4))
 	}
 
 	return arrayId
 }
 
-module.exports = Chat 
+module.exports = function (main) {
+	return new Chat(main)
+}

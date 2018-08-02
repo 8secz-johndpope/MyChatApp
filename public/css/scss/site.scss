@@ -70,6 +70,12 @@ body {
 	}
 }
 
+.notify-el {
+	display: flex;
+	flex-flow: row nowrap;
+	margin-top: 1em;
+}
+
 // ::-webkit-scrollbar, ::-moz-scrollbar {
 // 	width: 5px;
 // 	height: 5px;

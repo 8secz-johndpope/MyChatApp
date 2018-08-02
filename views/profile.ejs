@@ -8,8 +8,8 @@
 <body>
 	<%- include('includes/header', {user: me}) %>
 	<div class="container-fluid profile-header p-0">
-		<div data-cover='<%= user.cover_image -%>' id='profile-cover' class="profile-bg d-flex justify-content-center align-items-center position-relative" style="background-image: url('<%= user.cover_image -%>')">
-			<div class="profile-change-cover">
+		<div data-cover='<%= user.cover_image + "?width=1024" -%>' id='profile-cover' class="profile-bg d-flex justify-content-center align-items-center position-relative" style="background-image: url('<%= user.cover_image + '?width=1024' -%>')">
+			<div style='display: none' class="profile-change-cover">
 				<button id='change-cover-ok' class='btn btn-primary d-none' for="cover-input">OK</button>
 				<button id='change-cover-no' class='btn btn-danger d-none' for="cover-input"><i class="fa fa-times"></i></button>
 				<label class='btn btn-outline-light' for="cover-input">Change</label>
