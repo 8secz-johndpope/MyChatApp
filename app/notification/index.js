@@ -40,6 +40,7 @@ Notification.prototype.get = async function (user, limit, offset, type) {
 	if (!limit) limit = CONFIG.NOTIFY_GET_LIMIT
 	if (!offset) offset = CONFIG.NOTIFY_GET_OFFSET
 	if (!type) type = /.*/
+	const db = await this.database.ready()
 	
 	const arrayRes = await db.collection('Notify').find({
 		type: type,

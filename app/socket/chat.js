@@ -46,7 +46,10 @@ Chat.prototype.sendMessageHandle = function (sock) {
 		// add to notify
 		this.notify.add({
 			user: othername,
-			type: 'chat message'
+			type: 'message',
+			content: {
+				user: username
+			}
 		})
 
 		const db = await this.database.ready()

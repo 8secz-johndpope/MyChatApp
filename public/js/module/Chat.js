@@ -1,33 +1,61 @@
 "use strict"
 
-const LIMIT_GET_MESSAGE = 10
+import GetJSON from './getJson.js'
+const LIMIT_GET_MESSAGE = 5
 
 class Chat {
-    constructor (chatDisplay) {
+    constructor () {
         this.socket = io()
         this.user = null
-        this.view = chatDisplay
         this.event = {
-            "recv": null,
-            "send": null
+            "recv": [],
+            "send": []
         }
+        // image to send
+        this.arrImgsToSend = {}
+        this.imgId = 0
+        this.totalImgsSize = 0
 
         this.currentOffsetMessage = 0
-
-        $('<div/>').attr('id', 'see-more').addClass('')
-        .text('See more')
-        .appendTo($(this.view))
+        this.currentUser = ''
+        this.myName = ''
     }
 
     async init () {
         this.user = await this._getMyInfo()
+        this.myName = this.user.data.username
+        this._findUserFromURL()
+
         this.socket.on('receive chat', (data) => {
             if (!this.event.recv) throw new Error('Event Recv not found')
-            this.event.recv(data)
+            for (const callback of this.event.recv) {
+                callback(data)
+            }
         })
+
         this.socket.on('res msg with', (data) => {
             this._updateHistory(data)
         })
+
+        this.socket.on('update user list', (data) => {
+            for (const user of data.arr) {
+                if (this.currentUser === user.name) {
+                    if (user.status === 'active') {
+                        $('#chat-user-status').addClass('text-success').text('Active now')
+                    } else {
+                        $('#chat-user-status').addClass('text-secondary').text('Offline')
+                    }
+                }
+            }
+        })
+
+        // fetch history
+        this.socket.emit('get msg with', {
+			username: this.currentUser,
+			offset: 0,
+			limit: LIMIT_GET_MESSAGE,
+			type: 1
+		})
     }
 
     /**
@@ -35,7 +63,7 @@ class Chat {
      * @param {Function} callback (data: json)=>any 
      */
     onMessage (callback) {
-        this.event['recv'] = callback
+        this.event['recv'].push(callback)
     }
 
     /**
@@ -44,34 +72,27 @@ class Chat {
      * @param {String} msg message in text
      * @param {Array<{base64Data: String}>} imgs array of imgs data, is a base64 string
      */
-    send (user, msg, imgs) {
-        if (!user) throw new Error('User undefined')
-        if (!imgs) imgs = []
-        this.socket.emit('chat to', {
-            username: user,
-            msg: msg,
-            imgs: imgs
-        })
+    send () {
+        const msg = $('#chat-msg').val()
+        $('#chat-msg').val('')
+        
+		const arrImg = []
+		for (const pos in this.arrImgsToSend) {
+			arrImg.push(this.arrImgsToSend[pos])
+			delete this.arrImgsToSend[pos]
+		}
+		$('#img-preview').html('')
+
+		this.socket.emit('chat to', {
+			username: this.currentUser,
+			msg: msg,
+			imgs: arrImg
+		})
     }
 
-    _getMyInfo () {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: '/api/me',
-                type: 'GET',
-                dataType: 'json',
-                success: (json) => {
-                    if (json.err) {
-                        reject(json.msg)
-                    } else {
-                        resolve(json.data)
-                    }
-                },
-                error: (err) => {
-                    reject(err)
-                }
-            })
-        })
+    async _getMyInfo () {
+        const res = await GetJSON('/api/me')
+        return res
     }
 
     _updateHistory (data) {
@@ -87,7 +108,7 @@ class Chat {
 		}
 
 		for (const msg of arrMsg) {
-			displayMessage(myName, {
+			this._displayMessage({
 				username: msg.user_send,
 				msg: msg.msg,
 				imgs: msg.imgs
@@ -95,18 +116,47 @@ class Chat {
 		}
     }
 
-    displayMessage (myName, msgInfo, type) {
+    /**
+     * 
+     * @param {{}} data data of socket on `receive chat` 
+     */
+    showNewMessage (data) {
+        this._displayMessage(data, 1)
+    }
+
+    _displayMessage (msgInfo, type) {
+        const isMe = (this.myName === msgInfo.username) ? 'me' : ''
+        const div = this._createMessageDiv(msgInfo, isMe)
+
+        if (type === 1) { // new message
+            $('#chat-content').append(div)
+            this.scrollNewMessage()
+        } else {
+            $('#chat-content').prepend(div)
+        }
+    }
+
+    scrollNewMessage () {
+        $('#chat-content').stop().animate({
+            scrollTop: $('#chat-content')[0].scrollHeight
+        }, 500)
+    }
+
+    /**
+     * 
+     * @param {{username: String, msg: String, imgs: Array}} msgInfo 
+     * @param {String} isMe `me` or `` 
+     */
+    _createMessageDiv (msgInfo, isMe) {
         const user = msgInfo.username
         const msg = msgInfo.msg
         const imgs = msgInfo.imgs
-        const isMe = (myName === user) ? 'me' : ''
-        const chatDiv = $('#chat-content')
-    
+
         const div = $('<div/>').addClass('chat-mes ' + isMe).html(`
             <div class='chat-mes-wrap'><div class='chat-mes-user'>${user}</div></div>
             <div class='chat-mes-wrap'><pre class='chat-mes-mes'>${msg}</pre></div>
         `)
-    
+
         const imgDiv = $('<div/>').addClass('chat-mes-imgs')
         for (const imgId of imgs) {
             $('<img/>')
@@ -118,20 +168,22 @@ class Chat {
             .appendTo(imgDiv)
         }
         div.append(imgDiv)
-    
-        if (type === 1) { // newer
-            chatDiv.append(div)
-            scrollNewMessage()
-        } else { // older
-            chatDiv.prepend(div)
-        }
+
+        return div
     }
 
-    scrollNewMessage () {
-        $('#chat-content').stop().animate({
-            scrollTop: $('#chat-content')[0].scrollHeight
-        }, 500)
+    _findUserFromURL () {
+        const path = new URL(window.location).pathname
+        const match = path.match(/chat\/(.*)$/)
+        
+        if (!match || !match[1]) {
+            window.location = '/'
+            return
+        }
+        this.currentUser = match[1]
+		$('#user-pic img').attr('src', `/${this.currentUser}/avatar`)
+		$('#user-name').text(this.currentUser)
     }
 }
 
-module.exports = Chat
+export default Chat

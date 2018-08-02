@@ -34,6 +34,7 @@ database.ready(async (db) => {
 
 	const matchUserCol = await db.listCollections({name: 'User'}).toArray()
 	const matchChatCol = await db.listCollections({name: 'Chat'}).toArray()
+	const matchNotifyCol = await db.listCollections({name: 'Notify'}).toArray()
 	
 	if (matchUserCol.length > 0) {
 		Logger.log('info', 'User exists, skip..')
@@ -52,6 +53,16 @@ database.ready(async (db) => {
 		db.createCollection('Chat', (err) => {
 			if (err) throw err
 			Logger.log('info', 'Chat Collection created')
+		})
+	}
+
+	if (matchNotifyCol.length > 0) {
+		Logger.log('info', 'Notify Collection exists, skip')
+	} else {
+		Logger.log('info', 'Notify Collection not exist, wait for create...')
+		db.createCollection('Notify', (err) => {
+			if (err) throw err
+			Logger.log('info', 'Notify Collection created')
 		})
 	}
 

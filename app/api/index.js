@@ -10,15 +10,16 @@ const returner = require('./ApiReturn')
 function init (database, Store) {
 	api.use(require('./UserCoverPhoto')(database, Store))
 	api.use(require('./UserAvatar')(database, Store))
+	api.use(require('./UserGetNotification')(database, Store))
 	
-	api.get('/api/user/:username', async (req, res) => {
+	api.get('/api/user/:username', async (req, res, next) => {
 		try {
 			const username = req.params.username
 			const db = await database.ready()
 			const arrMatch = await db.collection('User').find({name: username}).toArray()
 
 			if (arrMatch.length === 0) {
-				throw new Error('Khong tim thay ' + username)
+				throw new Error('Khong tim thay user ' + username)
 			}
 
 			res.end(returner.success({
@@ -27,7 +28,7 @@ function init (database, Store) {
 				cover_image: arrMatch[0].cover_image
 			}))
 		} catch (e) {
-			console.log(e + "")
+			console.log(e)
 			res.end(returner.error(e))
 		}
 	})
@@ -48,7 +49,7 @@ function init (database, Store) {
 				cover_image: arrMatch[0].cover_image
 			}))
 		} catch (e) {
-			console.log(e + "")
+			console.log(e)
 			res.end(returner.error(e))
 		}
 	})
