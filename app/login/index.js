@@ -36,7 +36,7 @@ module.exports = function (database = require('../connect-mongo')(), store) {
 
 		const idImage = await store.addImage(picture.data)
 		if (!idImage) throw new Error('Cannot append image into storage')
-		const imagePath = store.getImagePath(idImage)
+		const imagePath = await store.getImageUrl(idImage)
 
 		const hash = bcrypt.hashSync(password, config.HASH.SALT_ROUND)
 

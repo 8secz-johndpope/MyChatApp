@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 	<title>SIGN UP - MY CHAT APP</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
 	<%- include('includes/meta') %>
 	<link rel="stylesheet" href="/css/login.min.css">
 </head>
@@ -18,6 +20,7 @@
 			<input required class='form-control' type="text" name='username' id='username' placeholder="USERNAME">
 		</div>
 		<div class='form-group'>
+			<div data-toggle='popover' id='alert' data-placement='top' title='Choose your avatar'></div>
 			<div id="img-preview">
 				<img src="" alt="">
 			</div>
@@ -44,6 +47,8 @@
 	<script>
 		$(document).ready(()=>{
 			$('#picture').on('change', function(){
+				$('#alert').popover('hide')
+
 				const url = URL.createObjectURL(this.files[0]);
 				$('#img-preview img').attr('src', url);
 			})
@@ -78,7 +83,21 @@
 					$(this).addClass('is-invalid');
 				}
 			});
+
+			$('#submit').on('click', (e)=>{
+				if (!checkPicture()) {
+					e.preventDefault()
+				}
+			})
 		});
+
+		function checkPicture() {
+			if (!$('#picture').val()) {
+				$('#alert').popover('show')
+				return false
+			}
+			return true
+		}
 	</script>
 </body>
 </html>
