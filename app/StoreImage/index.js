@@ -34,23 +34,25 @@ StoreImage.prototype.init = async function () {
 /**
  * 
  * @param {Buffer | String} data
- * @returns id of image 
+ * @param {{}} opts
+ * @return {Promise<String>} id of image 
  */
-StoreImage.prototype.addImage = async function (data, opts) {
-	const idImage = await this.storage.addImage(data, opts)
-	return idImage
+StoreImage.prototype.addImage = async function(data, opts) {
+	const idImage = await this.storage.addImage(data, opts);
+	return idImage;
 }
 
 /**
- * @returns url of image
- * @param {String} idImage id of image 
+ * @return {Promise<String>} url of image
+ * @param {String} idImage id of image
+ * @param {String} imageType type: public or private
  */
-StoreImage.prototype.getImageUrl = async function (idImage, imageType) {
+StoreImage.prototype.getImageUrl = async function(idImage, imageType) {
 	if (this.type === 'google' && imageType === 'public') {
-		const url = await this.storage.getPublic(idImage)
-		return url
+		const url = await this.storage.getPublic(idImage);
+		return url;
 	}
-	return '/storage/' + idImage
+	return '/storage/' + idImage;
 }
 
 /**
@@ -60,20 +62,20 @@ StoreImage.prototype.static = function () {
 	const router = express.Router()
 	router.get('/storage/:idImage', async (req, res) => {
 		if (!req.session || !req.session.user) {
-			res.status(401).send('Missing credentials')
-			return
+			res.status(401).send('Missing credentials');
+			return;
 		}
-		const idImage = req.params.idImage
-		const width = req.query.width ? req.query.width : 768
-		const height = req.query.height ? req.query.height : 768
+		const idImage = req.params.idImage;
+		const width = req.query.width ? +req.query.width : 768;
+		const height = req.query.height ? +req.query.height : 768;
 	
 		if (this.type === 'google') {
-			const data = await this.storage.getPrivate(idImage, width, height)
+			const data = await this.storage.getPrivate(idImage, width, height);
 			if (!data) {
-				res.sendFile(NO_IMAGE_PATH)
+				res.sendFile(NO_IMAGE_PATH);
 			} else {
-				res.setHeader('Content-Type', 'image/jpeg')
-				res.end(Buffer.from(data))
+				res.setHeader('Content-Type', 'image/jpeg');
+				res.end(Buffer.from(data));
 			}
 		} else {
 			const filepath = path.join(this.storage.folder, "/" + idImage + ".jpeg")

@@ -66,9 +66,9 @@ Other document:
 - [X] Compress file for limited storage (with [sharp])
 - [X] Store file, image to File Storage instead storage of server
 - [X] User can send **emoji** and **image** to each others
-- [ ] User can upload photos to share with people
+- [X] User can upload photos to share with people
 - [ ] User can **play games** with each others
-- [X] User can make change personal profile
+- [ ] User can make change personal profile
 - [ ] Privacy on user
 - etc...i haven't think more yet
 

@@ -21,14 +21,15 @@
 function createUserPanel (user) {
 	const div = $('<div/>').addClass('card text-center').css('width', '200px')
 	const classStatus = (user.status === 'active') ? 'text-success' : 'text-secondary'
-	
+	const coverImageUrl = user.cover_image + "?width=200&height=150";
+
 	div.html(`
 		<div class='card-img-top user-bg'>
-			<img style='object-fit: cover' src='${user.cover_image}' alt='background of ${user.name}'/>
+			<img style='object-fit: cover' src='${coverImageUrl}' alt='background of ${user.name}'/>
 		</div>
 		<div class='card-body'>
 			<div class='user-pic'>
-				<img src='${user.picture}' alt='avatar of ${user.name}'/>
+				<img src='/${user.name}/avatar' alt='avatar of ${user.name}'/>
 			</div>
 			<h4 class='card-title serif-font'>${user.name}</h4>
 			<div class='card-text ${classStatus}'>${user.status}</div>

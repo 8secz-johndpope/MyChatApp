@@ -32,17 +32,17 @@ module.exports = function (database, Store) {
 	})
 
 	router.get('/:username/avatar', async (req, res) => {
-		const username = req.params.username
+		const username = req.params.username;
 
-		const db = await database.ready()
-		const findArr = await db.collection('User').find({name: username}).toArray()
+		const db = await database.ready();
+		const findArr = await db.collection('User').find({name: username}).toArray();
 		if (findArr.length === 0) {
-			res.status(404).send('Not Found')
-			return
+			res.status(404).send('Not Found');
+			return;
 		}
 
-		const picturePath = findArr[0].picture
-		res.redirect(picturePath)
+		const picturePath = findArr[0].picture;
+		res.redirect(picturePath + '?width=100&height=100');
 	})
 
 	return router

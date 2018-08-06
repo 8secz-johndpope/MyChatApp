@@ -1,15 +1,17 @@
 {
-    "extends": "standard",
+    "extends": "google",
     "parserOptions": {
-        "ecmaVersion": 8
+        "ecmaVersion": 8,
+        "sourceType": "module"
     },
     "rules": {
-        "no-tabs": "off",
-        "new-cap": "off",
-        "indent": "off",
-        "no-trailing-spaces": "off",
-        "quotes": "off",
-        "no-undef":"warn",
-        "no-unused-vars": "warn"
+        "no-tabs":"off",
+        "require-jsdoc":"off",
+        "linebreak-style":"off",
+        "quotes":"off",
+        "max-len":"off",
+        "no-trailing-spaces":"off",
+        "no-unused-vars":"warn",
+        "new-cap":"warn"
     }
 }
