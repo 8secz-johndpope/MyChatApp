@@ -1,7 +1,7 @@
 import getJson from './module/getJson.js';
 
 $(document).ready(async function() {
-	const myName = (await getJson('/api/me')).data.username;
+	const myName = findNameInURL();
 	let offset = 0;
 	const LIMIT = 5;
 
@@ -37,5 +37,10 @@ $(document).ready(async function() {
 
 			$('#post').append(section);
 		}
+	}
+
+	function findNameInURL() {
+		const path = window.location.pathname.match(/\/([a-zA-Z_0-9]+)$/)[1];
+		return path;
 	}
 });
