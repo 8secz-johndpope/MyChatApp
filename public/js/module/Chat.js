@@ -154,8 +154,10 @@ class Chat {
 
         const div = $('<div/>').addClass('chat-mes ' + isMe).html(`
             <div class='chat-mes-wrap'><div class='chat-mes-user'>${user}</div></div>
-            <div class='chat-mes-wrap'><pre class='chat-mes-mes'>${msg}</pre></div>
+            <div class='chat-mes-wrap'><pre class='chat-mes-mes'></pre></div>
         `)
+
+        div.find('.chat-mes-mes').text(msg)
 
         const imgDiv = $('<div/>').addClass('chat-mes-imgs')
         for (const imgId of imgs) {

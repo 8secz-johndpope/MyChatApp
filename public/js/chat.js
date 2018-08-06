@@ -5,6 +5,7 @@ const LIMIT_GET_MESSAGE = 5
 $(document).ready(async () => {
 	const Chat = new ChatModule()
 	await Chat.init()
+	addEmoji()
 
 	Chat.onMessage((data) => {
 		Chat.showNewMessage(data)
@@ -79,4 +80,16 @@ function createTmpImgPreview (posID) {
 	$('<div/>').addClass('img-container').attr('id', 'img-preview-' + posID).attr('pos', posID).html(`
 		<img src='/images/loading.gif' alt='preview-${posID}' />
 	`).appendTo($('#img-preview'))
+}
+
+function addEmoji () {
+	for (let i = 0x1f600; i < 0x1f645; ++i) {
+		const text = String.fromCodePoint(i)
+		const emoji = $("<span/>").text(text)
+		emoji.click(() => {
+			const curText = $('#chat-msg').val()
+			$('#chat-msg').val(curText + text)
+		})
+		$('#emoji-list').append(emoji)
+	}
 }

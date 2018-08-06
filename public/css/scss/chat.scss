@@ -15,6 +15,9 @@
 		padding: 0.5em 1em;
 		border-radius: 5px 1em 5px 1em;
 		background: #aaa;
+
+		font-weight: 500;
+		font-family: $fontSans;		
 	}
 
 	&-wrap {
@@ -88,13 +91,16 @@
 }
 
 .chat-send-img {
-	padding: 0;
-	width: 70px;
+	padding: 0 1em;
+	position: relative;
+
 	@include displayFlex;
 	justify-content: center;
 	align-items: center;
+	margin: 0;
 	
 	input[type=file] {
+		position: absolute;
 		display: inline-block;
 		width: 0;
 		height: 0;
@@ -104,9 +110,16 @@
 
 .chat-control {
 	position: relative;
-	textarea {
+
+	.btn {
+		min-height: 100%;
+	}
+
+	.chat-msg, textarea {
 		// width: 100%;
 		@include flexGrow(1);
+		font-family: $fontSans;
+		font-weight: 500;
 	}
 
 	.img-preview {
@@ -161,5 +174,14 @@
 			// object-fit: cover;
 			vertical-align: top;
 		}
+	}
+}
+
+#emoji-list {
+	width: 250px;
+	padding: 5px;
+	font-size: 1.25em;
+	span {
+		margin: 2px;
 	}
 }

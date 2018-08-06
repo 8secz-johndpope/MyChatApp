@@ -29,6 +29,7 @@ Server:
 - [express-socket.io-session] - for share session to [socket.io]
 - [bcrypt] - for hashing user password
 - [winston] - for logging
+- [googleapis] - for connecting to Google Photos, to store image
 
 Client
 - [JQuery] and [Bootstrap 4] for UI
@@ -63,10 +64,11 @@ Other document:
 - [X] Store user and chat infomation by [mongodb]
 - [X] Get post data and file with [express-fileupload]
 - [X] Compress file for limited storage (with [sharp])
-- [ ] Store file, image to File Storage instead storage of server
-- [ ] User can send **emoji** and **image** to each others
+- [X] Store file, image to File Storage instead storage of server
+- [X] User can send **emoji** and **image** to each others
+- [ ] User can upload photos to share with people
 - [ ] User can **play games** with each others
-- [ ] User can make change personal profile
+- [X] User can make change personal profile
 - [ ] Privacy on user
 - etc...i haven't think more yet
 
@@ -120,6 +122,7 @@ node index.js
 [express-fileupload]: https://www.npmjs.com/package/express-fileupload
 [body-parser]: https://www.npmjs.com/package/body-parser
 [winston]: https://www.npmjs.com/package/winston
+[googleapis]: https://www.npmjs.com/package/googleapis
 
 [JQuery]: https://jquery.com/
 [Bootstrap 4]: https://getbootstrap.com/
