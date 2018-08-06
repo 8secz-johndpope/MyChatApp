@@ -76,6 +76,14 @@ body {
 	margin-top: 1em;
 }
 
+.input-file {
+	position: relative;
+	&-hide {
+		position: absolute;
+		visibility: hidden;
+	}
+}
+
 // ::-webkit-scrollbar, ::-moz-scrollbar {
 // 	width: 5px;
 // 	height: 5px;

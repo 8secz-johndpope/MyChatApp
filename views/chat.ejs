@@ -21,12 +21,23 @@
 				<div id="scroll-pin"></div>
 			</div>
 			<div class="chat-control d-flex flex-row align-items-stretch">
-				<textarea class='form-control' name="chat-msg" id="chat-msg" rows="2"></textarea>
+				<div class="chat-msg">
+					<textarea class='form-control' name="chat-msg" id="chat-msg" rows="2"></textarea>
+				</div>
+				<div class="dropdown dropup">
+					<button class="btn btn-secondary dropdown-toggle" id='dropdown-emoji' data-toggle='dropdown' aria-haspopup="true" aria-expanded="false">
+						<i class="fa fa-laugh"></i>
+					</button>
+					<div id='emoji-list' class="dropdown-menu shadow" aria-labelledby="dropdown-emoji">
+					</div>
+				</div>
 				<label class='btn btn-secondary chat-send-img' title='send image' for='image-file' id='send-image'>
 					<i class="fa fa-image"></i>
 					<input type="file" accept=".jpg,.jpeg,.png,.ico,.bmp" multiple=true name="image-file" id="image-file">
 				</label>
-				<button class='btn btn-primary' id='send'>SEND</button>
+				<button class='btn btn-primary' id='send'>
+					<i class="fas fa-paper-plane"></i>
+				</button>
 				<div class="img-preview">
 					<div class="img-preview-slide" id="img-preview">
 						
