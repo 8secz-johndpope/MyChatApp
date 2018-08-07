@@ -1,12 +1,12 @@
-const auth = require('./AuthorizeService')
-const fetch = require('node-fetch')
-const Logger = require('../logging')
+const auth = require('./AuthorizeService');
+const fetch = require('node-fetch');
+const Logger = require('../logging');
 
-const DEFAULT_PHOTO_LIMITS = 5
-const DEFAULT_ALBUM_LIMITS = 10
+const DEFAULT_PHOTO_LIMITS = 5;
+const DEFAULT_ALBUM_LIMITS = 10;
 
-function ConnectGooglePhotos () {
-	this.access_token = false
+function ConnectGooglePhotos() {
+	this.access_token = false;
 }
 
 /**
@@ -15,23 +15,23 @@ function ConnectGooglePhotos () {
  * @param {String} filename
  * @param {String | Buffer } data
  * @param {Function} callback
- * @return  image object
+ * @return {{}} image object
  */
-ConnectGooglePhotos.prototype.upload = async function (albumId, filename, data, callback) {
+ConnectGooglePhotos.prototype.upload = async function(albumId, filename, data, callback) {
 	const uploadHeader = {
-		Authorization: 'Bearer ' + this.access_token,
-		'X-Goog-Upload-File-Name': filename
-	}
+		'Authorization': 'Bearer ' + this.access_token,
+		'X-Goog-Upload-File-Name': filename,
+	};
 	const finalHeader = {
-		Authorization: 'Bearer ' + this.access_token
-	}
+		'Authorization': 'Bearer ' + this.access_token,
+	};
 
 	const tokenRes = await fetch('https://photoslibrary.googleapis.com/v1/uploads', {
 		headers: uploadHeader,
 		method: 'POST',
-		body: Buffer.from(data)
-	})
-	const uploadToken = await tokenRes.text()
+		body: Buffer.from(data),
+	});
+	const uploadToken = await tokenRes.text();
 
 	const fileMetadata = {
 		albumId: albumId,
@@ -39,75 +39,75 @@ ConnectGooglePhotos.prototype.upload = async function (albumId, filename, data, 
 			{
 				"description": filename,
 				"simpleMediaItem": {
-					"uploadToken": uploadToken
-				}
-			}
-		]
-	}
+					"uploadToken": uploadToken,
+				},
+			},
+		],
+	};
 
 	const res = await fetch("https://photoslibrary.googleapis.com/v1/mediaItems:batchCreate", {
 		headers: finalHeader,
 		method: 'POST',
-		body: JSON.stringify(fileMetadata)
-	})
-	const json = await res.json()
+		body: JSON.stringify(fileMetadata),
+	});
+	const json = await res.json();
 
 	if (!json || !json.newMediaItemResults[0]) {
-		throw json
+		throw json;
 	}
-	const file = json.newMediaItemResults[0].mediaItem
+	const file = json.newMediaItemResults[0].mediaItem;
 
-	if (!file) throw json
+	if (!file) throw json;
 
 	if (typeof callback === 'function') {
-		callback(file)
+		callback(file);
 	}
 
-	return file
-}
+	return file;
+};
 
 /**
  * list media items
  * @param {Number} limit 
  * @param {Function} callback 
  */
-ConnectGooglePhotos.prototype.list = async function (limit, callback) {
+ConnectGooglePhotos.prototype.list = async function(limit, callback) {
 	// check limit param
-	limit = (limit < 1) ? DEFAULT_PHOTO_LIMITS : limit
+	limit = (limit < 1) ? DEFAULT_PHOTO_LIMITS : limit;
 
 	const Headers = {
 		"Content-Type": 'application/json',
-		"Authorization": "Bearer " + this.access_token
-	}
+		"Authorization": "Bearer " + this.access_token,
+	};
 
 	const res = await fetch("https://photoslibrary.googleapis.com/v1/mediaItems:search", {
 		headers: Headers,
 		method: 'POST',
-		body: JSON.stringify({pageSize: limit + ""})
-	})
+		body: JSON.stringify({pageSize: limit + ""}),
+	});
 
 	const listRes = await res.json()
 
 	if (typeof callback === 'function') {
-		callback(listRes.mediaItems)
+		callback(listRes.mediaItems);
 	}
 
-	if (!listRes.mediaItems) return []
-	return listRes.mediaItems
-}
+	if (!listRes.mediaItems) return [];
+	return listRes.mediaItems;
+};
 
 /**
  * list all photo albums
  * @param {Number} limit 
  * @param {Function} callback 
  */
-ConnectGooglePhotos.prototype.listAlbums = async function (limit, callback) {
+ConnectGooglePhotos.prototype.listAlbums = async function(limit, callback) {
 	// check limit param
-	limit = (limit < 1) ? DEFAULT_ALBUM_LIMITS : limit
+	limit = (limit < 1) ? DEFAULT_ALBUM_LIMITS : limit;
 
 	const Headers = {
 		"Content-Type": 'application/json',
-		"Authorization": "Bearer " + this.access_token
+		"Authorization": "Bearer " + this.access_token,
 	}
 
 	const res = await fetch("https://photoslibrary.googleapis.com/v1/albums", {
@@ -193,14 +193,14 @@ ConnectGooglePhotos.prototype.getAlbumByNameOrCreate = async function (name) {
 			method: "POST",
 			body: JSON.stringify({
 				album: {
-					title: name
-				}
-			})
+					title: name,
+				},
+			}),
 		}
-	)
-	const resJSON = await res.json()
+	);
+	const resJSON = await res.json();
 
-	return resJSON
+	return resJSON;
 }
 
 /**
@@ -252,33 +252,36 @@ ConnectGooglePhotos.prototype.listInAlbum = async function (albumID, callback) {
  * @param {Number} [height] default: 768
  * @returns {Prom ise<String>} url public in web
  */
-ConnectGooglePhotos.prototype.getPublic = async function (mediaId, width = 1024, height = 768) {
+ConnectGooglePhotos.prototype.getPublic = async function(mediaId, width = 1024, height = 768) {
 	const Endpoint = "https://photoslibrary.googleapis.com/v1/mediaItems/" + mediaId
 	const Header = {
 		"Content-type": "application/json",
-		"Authorization": "Bearer " + this.access_token
+		"Authorization": "Bearer " + this.access_token,
 	}
 
-	const resForBaseUrl = await fetch(Endpoint, {headers: Header})
-	const jsonRes = await resForBaseUrl.json()
-	const baseUrl = jsonRes.baseUrl
-	if (!baseUrl) return ''
+	const resForBaseUrl = await fetch(Endpoint, {headers: Header});
+	const jsonRes = await resForBaseUrl.json();
+	const baseUrl = jsonRes.baseUrl;
+	if (!baseUrl) {
+		console.log(jsonRes);
+		return "";
+	}
 
-	if (typeof width !== 'number') width = 1024
-	if (typeof height !== 'number') height = 768
+	if (typeof width !== 'number') width = 1024;
+	if (typeof height !== 'number') height = 768;
 
-	return baseUrl + `=w${width}-h${height}`
+	return baseUrl + `=w${width}-h${height}`;
 }
 
 /**
  * @returns {Promise<Buffer>} data of private image
  */
-ConnectGooglePhotos.prototype.getPrivate = async function (mediaId, width = 1024, height = 768) {
-	const baseUrl = await this.getPublic(mediaId, width, height)
-	if (!baseUrl) return ""
+ConnectGooglePhotos.prototype.getPrivate = async function(mediaId, width = 1024, height = 768) {
+	const baseUrl = await this.getPublic(mediaId, width, height);
+	if (!baseUrl) return "";
 
-	const binData = await (await fetch(baseUrl)).arrayBuffer()
-	return binData
+	const binData = await (await fetch(baseUrl)).buffer();
+	return binData;
 }
 
 /// ---Like Store Image---
@@ -290,7 +293,7 @@ ConnectGooglePhotos.prototype.getPrivate = async function (mediaId, width = 1024
  * @param {String} [type] `private` or `public`, default is `public` 
  * @returns {Promise<String>} id of mediaItems (image)
  */
-ConnectGooglePhotos.prototype.addImage = async function (data, opts, type) {
+ConnectGooglePhotos.prototype.addImage = async function(data, opts, type) {
 	const name = 'No name'
 	const albumId = (type === 'private') ? this.albums.private.id : this.albums.public.id
 
@@ -304,12 +307,12 @@ ConnectGooglePhotos.prototype.addImage = async function (data, opts, type) {
  * @returns {Promise<void>} nothing, just await
  */
 ConnectGooglePhotos.prototype.init = async function (callback) {
-	this.access_token = await auth.getToken()
+	this.access_token = await auth.getToken();
 
 	this.albums = {}
 	this.albums.public = await this.getAlbumByNameOrCreate('Public')
 	if (!this.albums.public.shareInfo || !this.albums.public.shareInfo.shareableUrl) {
-		this.shareAlbum(this.albums.public.id)
+		this.shareAlbum(this.albums.public.id);
 	}
 	this.albums.private = await this.getAlbumByNameOrCreate('Private')
 

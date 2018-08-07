@@ -9,5 +9,4 @@
 	"easysass.targetDir": "public/css",
 
 	"eslint.run": "onType",
-	"files.eol": "\n"
 }

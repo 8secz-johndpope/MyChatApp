@@ -3,31 +3,31 @@
  * @module StoreImage
  */
 
-const express = require('express')
-const config = require('../../config')
-const path = require('path')
-const Logger = require('../logging')
-const fs = require('fs')
-const NO_IMAGE_PATH = path.join(__dirname, '../../public/images/no-image.png')
+const express = require('express');
+const config = require('../../config');
+const path = require('path');
+const Logger = require('../logging');
+const fs = require('fs');
+const NO_IMAGE_PATH = path.join(__dirname, '../../public/images/no-image.png');
 
-const StoreLocal = require('../store-image-local')(config.LocalStorage)
-const GooglePhotos = require("../connect-google-photos")
+const StoreLocal = require('../store-image-local')(config.LocalStorage);
+const GooglePhotos = require("../connect-google-photos");
 
-function StoreImage () {
+function StoreImage() {
 	if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test_web') {
-		this.type = 'google'
-		this.storage = GooglePhotos
-		Logger.info('Use Google Photos for image storage')
+		this.type = 'google';
+		this.storage = GooglePhotos;
+		Logger.info('Use Google Photos for image storage');
 	} else {
-		this.type = 'local'
-		this.storage = StoreLocal
-		Logger.info('Use Local Folder for image storage')
+		this.type = 'local';
+		this.storage = StoreLocal;
+		Logger.info('Use Local Folder for image storage');
 	}
 }
 
-StoreImage.prototype.init = async function () {
+StoreImage.prototype.init = async function() {
 	if (this.type === 'google') {
-		await this.storage.init()
+		await this.storage.init();
 	} // else, local storage doesn't need init
 }
 
@@ -58,8 +58,8 @@ StoreImage.prototype.getImageUrl = async function(idImage, imageType) {
 /**
  * use for express server
  */
-StoreImage.prototype.static = function () {
-	const router = express.Router()
+StoreImage.prototype.static = function() {
+	const router = express.Router();
 	router.get('/storage/:idImage', async (req, res) => {
 		if (!req.session || !req.session.user) {
 			res.status(401).send('Missing credentials');
@@ -78,12 +78,12 @@ StoreImage.prototype.static = function () {
 				res.end(Buffer.from(data));
 			}
 		} else {
-			const filepath = path.join(this.storage.folder, "/" + idImage + ".jpeg")
-			if (!fs.existsSync(filepath)) res.sendFile(NO_IMAGE_PATH)
-			else res.sendFile(filepath)
+			const filepath = path.join(this.storage.folder, "/" + idImage + ".jpeg");
+			if (!fs.existsSync(filepath)) res.sendFile(NO_IMAGE_PATH);
+			else res.sendFile(filepath);
 		}
-	})
-	return router
+	});
+	return router;
 }
 
 /**
