@@ -8,5 +8,6 @@
 	],
 	"easysass.targetDir": "public/css",
 
-	"eslint.run": "onType"
+	"eslint.run": "onType",
+	"files.eol": "\n"
 }

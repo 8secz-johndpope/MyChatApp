@@ -1,11 +1,10 @@
-import Notification from './module/Notification.js'
-import ChatModule from './module/Chat.js'
+import Notification from './module/Notification.js';
 
 $(document).ready(async () => {
-	const Notify = new Notification()
+	const Notify = new Notification();
 
-	const notifyHistory = await Notify.fetch()
+	const notifyHistory = await Notify.fetch();
 	for (const notify of notifyHistory) {
-		Notify.add(notify)
+		Notify.add(notify);
 	}
-})
+});
