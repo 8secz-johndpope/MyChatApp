@@ -4,12 +4,13 @@ node_js:
   "node"
 install:
   - npm install
-  - npm install --save-dev nyc
-  - npm install --save-dev mocha
+  - npm install -g nyc
+  - npm install -g mocha
   - npm install --save-dev coveralls
 script:
   - npm test
 after_success:
+  - npm run coverage
   - npm run coveralls
 env:
   - is_in_travis=true
