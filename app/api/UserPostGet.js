@@ -1,5 +1,6 @@
 const returner = require('./ApiReturn');
 const router = require('express').Router();
+const ObjectId = require('mongodb').ObjectID;
 
 const DEFAULT_OFFSET = 0;
 const DEFAULT_LIMIT = 5;
@@ -41,15 +42,15 @@ function UserHandlePost(database, StoreImage) {
 		}
 
 		const idPost = req.params.id;
-		if (!id) {
+		if (!idPost) {
 			res.end(returner.error('Missing id'));
 			return;
 		}
 
 		const db = await database.ready();
-		const arrRes = await db.collection('Post').find({_id: idPost}).toArray();
+		const arrRes = await db.collection('Post').find(ObjectId(idPost)).toArray();
 
-		const result = (arrRes.length > 0) ? arrRes[0] : undefined;
+		const result = (arrRes.length > 0) ? arrRes[0] : {};
 		res.end(returner.success(result));
 	});
 
