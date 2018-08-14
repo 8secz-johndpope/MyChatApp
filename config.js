@@ -6,7 +6,7 @@ module.exports = {
 		"in_server_i_will_config_to_env"
 	],
 
-	LOCAL_DATABASE_URL: "mongodb://127.0.0.1:27017/chatApp",
+	LOCAL_DATABASE_URL: "mongodb://127.0.0.1:27017/myChatApp",
 	
 	HASH: {
 		SALT_ROUND: 10

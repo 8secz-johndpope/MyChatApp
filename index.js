@@ -9,7 +9,7 @@ const path = require('path');
 
 const database = require('./app/connect-mongo');
 const storage = require('./app/StoreImage');
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8080;
 
 const Logger = require('./app/logging');
 
