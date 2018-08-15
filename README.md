@@ -1,6 +1,6 @@
 # MY CHAP APP
 
-A simple social chat website write in NodeJS
+A simple social chat website write in **Mongo-Express-Node-Bootstrap**
 
 Demo [beohoang98-chat-app.herokuapp.com](https://beohoang98-chat-app.herokuapp.com)
 
@@ -86,7 +86,9 @@ Install package:
 npm install
 ```
 
-Then, config your server and database on file `config.json`
+[Install](https://www.mongodb.com/download-center?jmp=nav#community) and run mongodb
+
+Then, config your server and database on file `config.js`
 
 ```json
 {
@@ -96,7 +98,7 @@ Then, config your server and database on file `config.json`
 	],
 	"LOCAL_DATABASE_URL": "mongodb://<dbusername>:<dbpass>@<your_host>/<your_database_name>",
 	"HASH": {
-		"SALT_ROUND": 10 // change to greater number if you want more secure your hash
+		"SALT_ROUND": 10
 	}
 }
 ```
